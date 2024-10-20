@@ -45,13 +45,13 @@ The **Movie Rent Management System** is a web application that allows users to r
    git clone https://github.com/MeetAntala45/moviesRentManagementSystem.git
 
 2. Set up the database connection: In the appsettings.json file, update the connection string to match your local SQL Server configuration:
-```bash
-"ConnectionStrings": {
-  "DefaultConnectionString": "Server=YOUR_SERVER_NAME;Initial Catalog=rentmoviesdb;Integrated Security=True;Connect Timeout=30;"
-},
+  ```bash
+  "ConnectionStrings": {
+    "DefaultConnectionString": "Server=YOUR_SERVER_NAME;Initial Catalog=rentmoviesdb;Integrated Security=True;Connect Timeout=30;"
+  },
 
 3. Run this command in package manager console.
-```bash
+  ```bash
   add-migration initial
   update-database
 
