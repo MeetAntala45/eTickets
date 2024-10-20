@@ -1,7 +1,9 @@
 # 🎬 Movie Rent Management System
 
+
 ## Project Overview
 The **Movie Rent Management System** is a web application that allows users to rent movies online. Users can browse through available movies, view details, and place rental orders. Admin users can manage movie data and other related entities, such as production companies, producers, and actors. The system provides an efficient platform for managing movie rentals and organizing movie-related information.
+
 
 ## Features
 
@@ -9,6 +11,7 @@ The **Movie Rent Management System** is a web application that allows users to r
 - 📽️ **Browse Movies**: View all available movies with details like name, description, price, and production information.
 - 🛒 **Rent Movies**: Users can rent movies and track their orders.
 - 📜 **View Orders**: Users can view their rental history and all placed orders.
+
 
 ### Admin Features
 - 🛠️ **Manage Movies**: Add, edit, or delete movies. When creating a movie, admins can select the production company, producer, and actors from existing entities.
@@ -22,10 +25,12 @@ The **Movie Rent Management System** is a web application that allows users to r
 - Admins can view all orders placed by users.
 - Each order contains details about the user, the movie rented and total price.
 
+
 ## Tech Stack
 - **Backend**: .NET Core MVC (NET 8.0)
 - **Database**: Microsoft SQL Server
 - **ORM**: Entity Framework Core
+
 
 ## Installation & Setup
 
@@ -43,16 +48,16 @@ The **Movie Rent Management System** is a web application that allows users to r
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/MeetAntala45/moviesRentManagementSystem.git
+   
+2. Open `.sln` file in Visual Studio.
+   
+3. Set up the database connection: In the `appsettings.json` file, update the connection string to match your local SQL Server configuration:
+    ```bash
+    "ConnectionStrings": {
+      "DefaultConnectionString": "Server=YOUR_SERVER_NAME;Initial Catalog=rentmoviesdb;Integrated Security=True;Connect Timeout=30;"
+    },
 
-2. Set up the database connection: In the appsettings.json file, update the connection string to match your local SQL Server configuration:
-  ```bash
-  "ConnectionStrings": {
-    "DefaultConnectionString": "Server=YOUR_SERVER_NAME;Initial Catalog=rentmoviesdb;Integrated Security=True;Connect Timeout=30;"
-  },
-
-3. Run this command in package manager console.
-  ```bash
-  add-migration initial
-  update-database
-
-
+4. Run this command in package manager console.
+    ```bash
+    add-migration initial
+    update-database
