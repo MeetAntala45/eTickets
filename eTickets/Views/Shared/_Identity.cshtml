@@ -16,9 +16,10 @@ else
 
     @*User profile section*@
     <div class="dropdown">
-        <button class="btn btn-outline-success dropdown-toggle" type="button" id="profile-btn" data-toggle="dropdown"
-                aria-expanded="false">
-            <i class="bi bi-person-badge"></i> Hello @UserManager.GetUserName(User)
+        <button class="btn btn-outline-success dropdown-toggle d-flex align-items-center" type="button" id="profile-btn"
+                data-toggle="dropdown" aria-expanded="false" style="padding: 10px 20px; font-size: 1rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: all 0.3s ease;">
+            <i class="bi bi-person-badge me-2" style="font-size: 1.2rem;"></i>
+            <span>  @UserManager.GetUserName(User)</span>
         </button>
         <ul class="dropdown-menu" aria-labelledby="profile-btn">
             <li>
