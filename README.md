@@ -10,13 +10,13 @@ The **Movie Rent Management System** is a web application that allows users to r
 ### User Features
 - 📽️ **Browse Movies**: View all available movies with details like name, description, price, and production information.
 - 🛒 **Rent Movies**: Users can rent movies and track their orders.
-- 📜 **View Orders**: Users can view their rental history and all placed orders.
+- 📜 **View Orders**: Users can view their rental history of all placed orders.
 
 
 ### Admin Features
-- 🛠️ **Manage Movies**: Add, edit, or delete movies. When creating a movie, admins can select the production company, producer, and actors from existing entities.
-- 🏢 **Manage Production Companies**: Add, edit, or delete production companies.
-- 🎬 **Manage Producers & Actors**: Add, edit, or delete producer and actor details.
+- 🛠️ **Manage Movies**: Add, or edit delete movies. When creating a movie, admins can select the production company, producer, and actors from existing entities.
+- 🏢 **Manage Production Companies**: Add or edit production companies.
+- 🎬 **Manage Producers & Actors**: Add or edit producer and actor details.
 - 📊 **View All Orders**: Admins can view all rental orders placed by users.
 
 
