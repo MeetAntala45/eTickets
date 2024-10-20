@@ -1,0 +1,52 @@
+﻿@model Producer
+
+@{
+    ViewData["Title"] = "Add a New Producer";
+}
+
+<div class="container d-flex justify-content-center align-items-center mt-5">
+    <div class="col-md-6 bg-light shadow p-4 rounded">
+        <h2 class="text-center mb-4">Add a New Producer</h2>
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group text-center">
+                <img id="ProfilePicturePreview" class="border-info rounded-circle mb-3" style="max-width: 150px; height: 150px; object-fit: cover;" alt="Producer Profile Picture" />
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="ProfilePictureURL" class="form-label"></label>
+                <input asp-for="ProfilePictureURL" class="form-control" placeholder="Enter image URL" />
+                <span asp-validation-for="ProfilePictureURL" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="FullName" class="form-label"></label>
+                <input asp-for="FullName" class="form-control" placeholder="Enter full name" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Bio" class="form-label"></label>
+                <input asp-for="Bio" class="form-control" placeholder="Enter bio" />
+                <span asp-validation-for="Bio" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a class="btn btn-outline-secondary" asp-action="Index">Show All</a>
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var output = document.getElementById('ProfilePicturePreview');
+            output.src = $("#ProfilePictureURL").val();
+        });
+
+        $("#ProfilePictureURL").on("change", function () {
+            var output = document.getElementById('ProfilePicturePreview');
+            output.src = $(this).val();
+        });
+    </script>
+}

@@ -1,0 +1,63 @@
+﻿@model Cinema
+
+@{
+    ViewData["Title"] = "Add a Production Company";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card shadow-lg p-4 rounded-3 border-0">
+            <h3 class="text-center mb-4 text-primary">Add a New Cinema</h3>
+
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <!-- Cinema Logo Preview -->
+                <div class="text-center mb-4">
+                    <img id="CinemaLogoPreview" class="border-info rounded-circle shadow-sm" style="width: 150px; height: 150px; object-fit: cover;" />
+                </div>
+
+                <!-- Cinema Logo URL Input -->
+                <div class="form-group mb-3">
+                    <label asp-for="Logo" class="form-label fw-bold">Logo URL</label>
+                    <input asp-for="Logo" class="form-control form-control-lg rounded-pill shadow-sm" />
+                    <span asp-validation-for="Logo" class="text-danger"></span>
+                </div>
+
+                <!-- Cinema Name Input -->
+                <div class="form-group mb-3">
+                    <label asp-for="Name" class="form-label fw-bold">Comapny Name</label>
+                    <input asp-for="Name" class="form-control form-control-lg rounded-pill shadow-sm" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <!-- Cinema Description Input -->
+                <div class="form-group mb-4">
+                    <label asp-for="Description" class="form-label fw-bold">Description</label>
+                    <input asp-for="Description" class="form-control form-control-lg rounded-pill shadow-sm" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <!-- Submit and Show All Buttons -->
+                <div class="d-flex justify-content-between">
+                    <a class="btn btn-outline-secondary rounded-pill px-4" asp-action="Index">Show All</a>
+                    <input type="submit" value="Create" class="btn btn-outline-primary rounded-pill px-4" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var output = document.getElementById('CinemaLogoPreview');
+            output.src = $("#Logo").val();
+        });
+
+        $("#Logo").on("input", function () {
+            var output = document.getElementById('CinemaLogoPreview');
+            output.src = $(this).val();
+        });
+    </script>
+}

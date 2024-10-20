@@ -1,0 +1,104 @@
+﻿@model NewMovieVM
+@using eTickets.Data;
+
+@{
+    ViewData["Title"] = "Create a new movie";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <div class="card shadow-lg p-4 rounded-3 border-0">
+            <h3 class="text-center mb-4 text-primary">Create a New Movie</h3>
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger text-center">
+                    <strong>Sorry!</strong> - @TempData["Error"]
+                </div>
+            }
+
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Name" class="form-label fw-bold">Movie Name</label>
+                            <input asp-for="Name" class="form-control form-control-lg  shadow-sm" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="StartDate" class="form-label fw-bold">Start Date</label>
+                            <input asp-for="StartDate" type="date" class="form-control form-control-lg shadow-sm" />
+                            <span asp-validation-for="StartDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="EndDate" class="form-label fw-bold">End Date</label>
+                            <input asp-for="EndDate" type="date" class="form-control form-control-lg shadow-sm" />
+                            <span asp-validation-for="EndDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="Price" class="form-label fw-bold">Price</label>
+                            <input asp-for="Price" type="number" class="form-control form-control-lg shadow-sm" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="ImageURL" class="form-label fw-bold">Image URL</label>
+                            <input asp-for="ImageURL" class="form-control form-control-lg shadow-sm" />
+                            <span asp-validation-for="ImageURL" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="CinemaId" class="form-label fw-bold">Cinema</label>
+                            <select asp-for="CinemaId" class="form-control form-control-lg shadow-sm" asp-items="ViewBag.Cinemas"></select>
+                            <span asp-validation-for="CinemaId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="MovieCategory" class="form-label fw-bold">Category</label>
+                            <select asp-for="MovieCategory" class="form-control form-control-lg shadow-sm" asp-items="Html.GetEnumSelectList<MovieCategory>()"></select>
+                            <span asp-validation-for="MovieCategory" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="ProducerId" class="form-label fw-bold">Producer</label>
+                            <select asp-for="ProducerId" class="form-control form-control-lg shadow-sm" asp-items="ViewBag.Producers"></select>
+                            <span asp-validation-for="ProducerId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="ActorIds" class="form-label fw-bold">Actors</label>
+                            <select asp-for="ActorIds" class="form-control form-control-lg shadow-sm" asp-items="ViewBag.Actors" multiple></select>
+                            <span asp-validation-for="ActorIds" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group mb-4">
+                        <label asp-for="Description" class="form-label fw-bold">Description</label>
+                        <textarea asp-for="Description" class="form-control form-control-lg rounded-3 shadow-sm" rows="4"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="text-center mb-4">
+                    <img id="ImageUrlPreview" class="img-fluid  shadow-sm" style="max-width: 100%;" />
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a class="btn btn-outline-secondary px-4" asp-action="Index">Show All</a>
+                    <input type="submit" value="Create" class="btn btn-outline-primary px-4" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $("#ImageURL").on("input", function () {
+            var output = document.getElementById("ImageUrlPreview");
+            output.src = $(this).val();
+        });
+    </script>
+}
