@@ -1,48 +1,61 @@
-﻿@inject UserManager<ApplicationUser> UserManager; 
-
+﻿@using Microsoft.AspNetCore.Identity
+@using eTickets.Models
+@inject UserManager<ApplicationUser> UserManager
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var fullName = user?.FullName ?? "User";
+}
 @if (!User.Identity.IsAuthenticated)
 {
-    <a class="btn btn-outline-success my-2 my-sm-0" asp-controller="Account" asp-action="Login">
-        <i class="bi bi-box-arrow-in-right"></i> Log in
-    </a>
-    <span style="padding: 5px;"></span>
-
-    <a class="btn btn-outline-primary my-2 my-sm-0" asp-controller="Account" asp-action="Register">
-        <i class="bi bi-person-plus"></i> Register
-    </a>
+    <div class="d-flex align-items-center">
+        <a class="btn btn-outline-dark me-2" asp-controller="Account" asp-action="Login">
+            <i class="bi bi-box-arrow-in-right me-1"></i> Log in
+        </a>
+        <a class="btn btn-dark" asp-controller="Account" asp-action="Register">
+            <i class="bi bi-person-plus me-1"></i> Register
+        </a>
+    </div>
 }
 else
 {
-
-    @*User profile section*@
-    <div class="dropdown">
-        <button class="btn btn-outline-success dropdown-toggle d-flex align-items-center" type="button" id="profile-btn"
-                data-toggle="dropdown" aria-expanded="false" style="padding: 10px 20px; font-size: 1rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: all 0.3s ease;">
-            <i class="bi bi-person-badge me-2" style="font-size: 1.2rem;"></i>
-            <span>  @UserManager.GetUserName(User)</span>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="profile-btn">
-            <li>
-                <a class="dropdown-item" asp-controller="Orders" asp-action="Index">
-                    <i class="bi bi-list"></i> Orders
-                </a>
-            </li>
-
-            @if (User.IsInRole("Admin"))
-            {
+    <!-- Logged-in User -->
+    <div class="d-flex align-items-center">
+        <!-- Profile Dropdown -->
+        <div class="dropdown me-2">
+            <button class="btn btn-light dropdown-toggle d-flex align-items-center shadow-sm" type="button"
+                    id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                    style="border-radius: 8px; padding: 8px 16px;">
+                <i class="bi bi-person-circle me-2" style="font-size: 1.2rem;"></i>
+                <span>@fullName</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="profileDropdown">
                 <li>
-                    <a class="dropdown-item" asp-controller="Account" asp-action="Users">
-                        <i class="bi bi-people"></i> Users
+                    <a class="dropdown-item" asp-controller="Orders" asp-action="Index">
+                        <i class="bi bi-receipt me-2"></i> My Orders
                     </a>
                 </li>
-            }
-        </ul>
+                <li>
+                    <a class="dropdown-item" asp-controller="Movies" asp-action="MyMovies">
+                        <i class="bi bi-collection-play me-2"></i> My Movies
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a class="dropdown-item" asp-controller="Account" asp-action="Users">
+                            <i class="bi bi-people me-2"></i> Manage Users
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                }
+            </ul>
+        </div>
+        <!-- Logout Button -->
+        <form asp-controller="Account" asp-action="Logout" method="post">
+            <button class="btn btn-dark" type="submit">
+                <i class="bi bi-box-arrow-right me-1"></i> Log out
+            </button>
+        </form>
     </div>
-    <span style="padding: 5px;"></span>
-    <form asp-controller="Account" asp-action="Logout">
-        <button class="btn btn-outline-danger my-2 my-sm-0">
-            <i class="bi bi-box-arrow-in-right"></i> Log out
-        </button>
-    </form>
 }
-

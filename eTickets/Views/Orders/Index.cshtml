@@ -1,55 +1,454 @@
 ﻿@model List<Order>
-
-@{ 
+@{
     ViewData["Title"] = "All orders";
 }
 
-<div class="row">
-    <div class="col-md-8 offset-2">
-        <p>
-            <h4>List of all your orders</h4>
+<style>
+    .orders-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 0 2rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .orders-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+    }
+
+    .orders-container {
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        overflow: hidden;
+        border: none;
+    }
+
+    .orders-header {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        padding: 2rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .orders-title {
+        font-size: 2rem;
+        font-weight: 800;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    .orders-subtitle {
+        color: #6c757d;
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .orders-table-container {
+        padding: 0;
+        overflow-x: auto;
+    }
+
+    .orders-table {
+        margin: 0;
+        border: none;
+        width: 100%;
+    }
+
+        .orders-table thead {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+            .orders-table thead th {
+                border: none;
+                padding: 1.5rem 1rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                font-size: 0.9rem;
+            }
+
+        .orders-table tbody tr {
+            border-bottom: 1px solid #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+            .orders-table tbody tr:hover {
+                background: #f8f9fa;
+                transform: scale(1.005);
+            }
+
+        .orders-table tbody td {
+            padding: 1.5rem 1rem;
+            border: none;
+            vertical-align: middle;
+        }
+
+    .order-id-badge {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 0.75rem 1.25rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 1rem;
+        display: inline-block;
+        text-align: center;
+        min-width: 100px;
+    }
+
+    .order-items-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .order-item {
+        background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        border-left: 4px solid #667eea;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+        .order-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 16px rgba(102,126,234,0.2);
+        }
+
+        .order-item:last-child {
+            margin-bottom: 0;
+        }
+
+    .item-details {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex: 1;
+    }
+
+    .quantity-badge {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: white;
+        padding: 0.4rem 0.8rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        min-width: 40px;
+        text-align: center;
+    }
+
+    .movie-name {
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0;
+        flex: 1;
+    }
+
+    .item-price {
+        font-weight: 600;
+        color: #667eea;
+        background: rgba(102,126,234,0.1);
+        padding: 0.25rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+    }
+
+    .total-cell {
+        font-weight: 700;
+        color: #28a745;
+        font-size: 1.3rem;
+        text-align: center;
+    }
+
+    .user-cell {
+        font-weight: 600;
+        color: #2c3e50;
+        background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        text-align: center;
+        border-left: 4px solid #ffc107;
+    }
+
+    .empty-orders {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #6c757d;
+    }
+
+    .empty-orders-icon {
+        font-size: 4rem;
+        color: #dee2e6;
+        margin-bottom: 2rem;
+    }
+
+    .empty-orders h3 {
+        color: #495057;
+        margin-bottom: 1rem;
+    }
+
+    .empty-orders p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+
+    .action-btn {
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        border: none;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.1rem;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        box-shadow: 0 8px 24px rgba(102,126,234,0.3);
+    }
+
+        .action-btn:hover {
+            background: linear-gradient(45deg, #5a67d8, #6b46c1);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(102,126,234,0.4);
+        }
+
+    .stats-row {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        padding: 1.5rem 2rem;
+        border-top: 1px solid #dee2e6;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .stat-item {
+        text-align: center;
+        background: white;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        min-width: 120px;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: block;
+    }
+
+    .stat-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    
+</style>
+
+<!-- Hero Section -->
+<section class="orders-hero">
+    <div class="container hero-content">
+        <h1 class="display-5 fw-bold mb-2">
+            <i class="bi bi-receipt-cutoff me-3"></i>
+            Order History
+        </h1>
+        <p class="lead mb-0">
+            Track all your movie ticket purchases
+            @if (Model.Any())
+            {
+                <span class="item-count">
+                    (@Model.Count @(Model.Count == 1 ? "order" : "orders"))
+                </span>
+            }
         </p>
+    </div>
+</section>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Order ID</th>
-                    <th>Items</th>
-                    <th>Total</th>
-                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-                    {
-                        <th>User</th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var order in Model)
+<!-- Main Content -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-11">
+            <div class="orders-container fade-in">
+                @if (Model.Any())
                 {
-                <tr>
-                    <td class="align-middle">@order.Id</td>
-                    <td class="align-middle">
-                        <ul style="list-style-type:none">
-                            @foreach (var item in order.OrderItems)
-                            {
-                                <li>
-                                    <div class="alert alert-info" role="alert">
-                                        <span class="badge bg-success">@item.Amount</span> [@item.Price.ToString("c")] - @item.Movie.Name
-                                    </div>
-                                </li>
-                            }
-                        </ul>
-                    </td>
-                    <td class="align-middle">
-                        @order.OrderItems.Select(m => m.Movie.Price * m.Amount).Sum().ToString("c")
-                    </td>
-                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-                    {
-                        <td class="align-middle"> @order.User.FullName </td>
-                    }
-                    </tr>
-                }
-            </tbody>
-        </table>
+                    <!-- Orders Header -->
+                    <div class="orders-header">
+                        <h2 class="orders-title">
+                            <i class="bi bi-list-check"></i>
+                            Your Orders
+                        </h2>
+                        <p class="orders-subtitle">Complete history of your movie ticket purchases</p>
+                    </div>
 
+                    <!-- Orders Table -->
+                    <div class="orders-table-container">
+                        <table class="orders-table table">
+                            <thead>
+                                <tr>
+                                    <th><i class="bi bi-hash me-2"></i>Order ID</th>
+                                    <th><i class="bi bi-film me-2"></i>Movie Items</th>
+                                    <th><i class="bi bi-currency-dollar me-2"></i>Total Amount</th>
+                                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                                    {
+                                        <th><i class="bi bi-person me-2"></i>Customer</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="order-id-badge">#@order.Id</span>
+                                        </td>
+                                        <td>
+                                            <ul class="order-items-list">
+                                                @foreach (var item in order.OrderItems)
+                                                {
+                                                    <li class="order-item">
+                                                        <div class="item-details">
+                                                            <span class="quantity-badge">@item.Amount</span>
+                                                            <h6 class="movie-name">@item.Movie.Name</h6>
+                                                            <span class="item-price">@item.Price.ToString("c")</span>
+                                                        </div>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </td>
+                                        <td class="total-cell">
+                                            @order.OrderItems.Select(m => m.Movie.Price * m.Amount).Sum().ToString("c")
+                                        </td>
+                                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                                        {
+                                            <td>
+                                                <div class="user-cell">
+                                                    <i class="bi bi-person-circle me-2"></i>
+                                                    @order.User.FullName
+                                                </div>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Statistics Row -->
+                    <div class="stats-row">
+                        <div class="stat-item">
+                            <span class="stat-number">@Model.Count</span>
+                            <p class="stat-label">Total Orders</p>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">@Model.SelectMany(o => o.OrderItems).Sum(i => i.Amount)</span>
+                            <p class="stat-label">Movies Purchased</p>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">@Model.SelectMany(o => o.OrderItems).Select(m => m.Movie.Price * m.Amount).Sum().ToString("c")</span>
+                            <p class="stat-label">Total Spent</p>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <!-- Empty Orders -->
+                    <div class="empty-orders">
+                        <div class="empty-orders-icon">
+                            <i class="bi bi-receipt"></i>
+                        </div>
+                        <h3>No orders found</h3>
+                        <p>You haven't placed any orders yet. Start browsing our movie collection!</p>
+                        <a class="action-btn" asp-controller="Movies" asp-action="Index">
+                            <i class="bi bi-film"></i>
+                            Browse Movies
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add smooth scroll behavior
+        document.documentElement.style.scrollBehavior = 'smooth';
+
+        // Add fade-in animation for orders
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.8s ease';
+            observer.observe(el);
+        });
+
+        // Add staggered animation for order items
+        const orderItems = document.querySelectorAll('.order-item');
+        orderItems.forEach((item, index) => {
+            item.style.animationDelay = `${index * 0.1}s`;
+            item.classList.add('fade-in-item');
+        });
+
+        // Add hover effects for table rows
+        const tableRows = document.querySelectorAll('.orders-table tbody tr');
+        tableRows.forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.style.boxShadow = '0 8px 25px rgba(102,126,234,0.15)';
+            });
+
+            row.addEventListener('mouseleave', function() {
+                this.style.boxShadow = 'none';
+            });
+        });
+    });
+</script>

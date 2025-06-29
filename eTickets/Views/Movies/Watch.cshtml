@@ -1,0 +1,401 @@
+﻿@model dynamic
+
+@{
+    ViewData["Title"] = Model.Name + " - Watch";
+}
+
+<style>
+    body {
+        background-color: #000;
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .watch-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background-color: #111;
+        min-height: 100vh;
+    }
+
+    .video-section {
+        position: relative;
+        background: #000;
+        width: 100%;
+        padding: 20px 0;
+    }
+
+    .video-player {
+        position: relative;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        background: #000;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+    }
+
+    .video-placeholder {
+        width: 100%;
+        height: 0;
+        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        position: relative;
+        background: linear-gradient(45deg, #1a1a1a, #2d2d2d);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .video-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-align: center;
+    }
+
+    .play-button {
+        width: 80px;
+        height: 80px;
+        background: rgba(255,255,255,0.2);
+        border: 3px solid white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+
+        .play-button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+    .play-icon {
+        width: 0;
+        height: 0;
+        border-left: 25px solid white;
+        border-top: 15px solid transparent;
+        border-bottom: 15px solid transparent;
+        margin-left: 5px;
+    }
+
+    .video-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .video-subtitle {
+        font-size: 1rem;
+        opacity: 0.8;
+    }
+
+    .movie-details {
+        background: #1a1a1a;
+        color: white;
+        padding: 40px 20px;
+    }
+
+    .details-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 40px;
+        align-items: start;
+    }
+
+    .movie-poster {
+        width: 100%;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    .movie-info {
+        padding: 0;
+    }
+
+    .movie-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #fff;
+    }
+
+    .movie-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 25px;
+        font-size: 0.95rem;
+    }
+
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #ccc;
+    }
+
+    .meta-label {
+        font-weight: 600;
+        color: #667eea;
+    }
+
+    .movie-category {
+        display: inline-block;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    .movie-description {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        color: #ddd;
+        margin-bottom: 30px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #5a67d8, #6b46c1);
+            transform: translateY(-2px);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-secondary {
+        background: transparent;
+        color: #ccc;
+        border: 2px solid #444;
+        padding: 12px 25px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .btn-secondary:hover {
+            border-color: #667eea;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+    .access-info {
+        background: rgba(102, 126, 234, 0.1);
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 30px;
+    }
+
+    .access-title {
+        font-weight: 600;
+        color: #667eea;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .access-text {
+        color: #ccc;
+        font-size: 0.9rem;
+    }
+
+    .controls-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.8));
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .video-player:hover .controls-bar {
+        opacity: 1;
+    }
+
+    .progress-bar {
+        flex: 1;
+        height: 4px;
+        background: rgba(255,255,255,0.3);
+        border-radius: 2px;
+        margin: 0 15px;
+        cursor: pointer;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: #667eea;
+        border-radius: 2px;
+        width: 25%; /* Example progress */
+    }
+
+    .control-button {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 4px;
+        transition: background 0.3s ease;
+    }
+
+        .control-button:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+   
+</style>
+
+<div class="watch-container">
+    <!-- Video Player Section -->
+    <div class="video-section">
+        <div class="video-player">
+            <div class="video-placeholder">
+                <div class="video-content">
+                    <div class="play-button">
+                        <div class="play-icon"></div>
+                    </div>
+                    <div class="video-title">@Model.Name</div>
+                    <div class="video-subtitle">Click to start watching</div>
+                </div>
+            </div>
+
+            <!-- Video Controls -->
+            <div class="controls-bar">
+                <button class="control-button">⏸️</button>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <button class="control-button">🔊</button>
+                <button class="control-button">⚙️</button>
+                <button class="control-button">⛶</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Movie Details Section -->
+    <div class="movie-details">
+        <div class="details-container">
+            <div>
+                <img src="@Model.ImageURL" alt="@Model.Name" class="movie-poster"
+                     onerror="this.src='/images/placeholder-movie.jpg'">
+            </div>
+
+            <div class="movie-info">
+                <div class="movie-category">@Model.Category</div>
+                <h1 class="movie-title">@Model.Name</h1>
+
+                <div class="movie-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Cinema:</span>
+                        <span>@Model.Cinema</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Producer:</span>
+                        <span>@Model.Producer</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Available Until:</span>
+                        <span>@DateTime.Parse(Model.EndDate.ToString()).ToString("MMMM dd, yyyy")</span>
+                    </div>
+                </div>
+
+                <div class="movie-description">
+                    @Model.Description
+                </div>
+
+                <div class="action-buttons">
+                    <a href="@Url.Action("MyMovies", "Movies")" class="btn-secondary">
+                        ← Back to My Movies
+                    </a>
+                    <a href="@Url.Action("Index", "Movies")" class="btn-primary">
+                        Browse More Movies
+                    </a>
+                </div>
+
+                <div class="access-info">
+                    <div class="access-title">
+                        🎬 Access Information
+                    </div>
+                    <div class="access-text">
+                        You have full access to this movie until @DateTime.Parse(Model.EndDate.ToString()).ToString("MMMM dd, yyyy").
+                        You can watch it as many times as you want during this period.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Simple video player interactions
+    document.querySelector('.play-button').addEventListener('click', function() {
+        alert('Video player functionality would be implemented here.\nThis would typically integrate with a video streaming service.');
+    });
+
+    document.querySelector('.video-placeholder').addEventListener('click', function() {
+        alert('Video player functionality would be implemented here.\nThis would typically integrate with a video streaming service.');
+    });
+
+    // Control buttons
+    document.querySelectorAll('.control-button').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.stopPropagation();
+            alert('Video control functionality would be implemented here.');
+        });
+    });
+
+    // Progress bar
+    document.querySelector('.progress-bar').addEventListener('click', function(e) {
+        e.stopPropagation();
+        const rect = this.getBoundingClientRect();
+        const percentage = (e.clientX - rect.left) / rect.width * 100;
+        document.querySelector('.progress-fill').style.width = percentage + '%';
+    });
+</script>

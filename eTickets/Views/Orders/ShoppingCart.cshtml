@@ -1,67 +1,502 @@
 ﻿@using eTickets.Data.ViewModels;
 @model ShoppingCartVM
-
 @{
     ViewData["Title"] = "Shopping Cart Summary";
 }
 
-<div class="row">
-    <div class="col-md-8 offset-2">
-        <div class="text-center">
-            <h2>Your Shopping Cart Summary</h2>
-        </div>
+<style>
+    .cart-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 3rem 0 2rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Selected Amount</th>
-                    <th>Movie</th>
-                    <th>Price</th>
-                    <th>Subtotal</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.ShoppingCart.ShoppingCartItems)
+        .cart-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+    }
+
+    .cart-container {
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        overflow: hidden;
+        border: none;
+    }
+
+    .cart-header {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        padding: 2rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .cart-title {
+        font-size: 2rem;
+        font-weight: 800;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    .cart-subtitle {
+        color: #6c757d;
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .cart-table-container {
+        padding: 0;
+        overflow-x: auto;
+    }
+
+    .cart-table {
+        margin: 0;
+        border: none;
+        width: 100%;
+    }
+
+        .cart-table thead {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+            .cart-table thead th {
+                border: none;
+                padding: 1.5rem 1rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                font-size: 0.9rem;
+            }
+
+        .cart-table tbody tr {
+            border-bottom: 1px solid #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+            .cart-table tbody tr:hover {
+                background: #f8f9fa;
+                transform: scale(1.01);
+            }
+
+        .cart-table tbody td {
+            padding: 1.5rem 1rem;
+            border: none;
+            vertical-align: middle;
+        }
+
+    .quantity-badge {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 1rem;
+        display: inline-block;
+        min-width: 60px;
+        text-align: center;
+    }
+
+    .movie-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .movie-thumbnail {
+        width: 60px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .movie-details h6 {
+        margin: 0;
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 1.1rem;
+    }
+
+    .movie-category {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .price-cell {
+        font-weight: 600;
+        color: #28a745;
+        font-size: 1.1rem;
+    }
+
+    .subtotal-cell {
+        font-weight: 700;
+        color: #2c3e50;
+        font-size: 1.2rem;
+    }
+
+    .remove-btn {
+        background: linear-gradient(45deg, #dc3545, #c82333);
+        color: white;
+        border: none;
+        padding: 0.75rem;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        font-size: 1.1rem;
+    }
+
+        .remove-btn:hover {
+            background: linear-gradient(45deg, #c82333, #bd2130);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(220,53,69,0.3);
+        }
+
+    .cart-footer {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        padding: 2rem;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .total-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+        border-left: 4px solid #28a745;
+    }
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .total-label {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .total-amount {
+        font-size: 2rem;
+        font-weight: 800;
+        background: linear-gradient(45deg, #28a745, #20c997);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        border: none;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1.1rem;
+        min-width: 180px;
+        justify-content: center;
+    }
+
+    .btn-place-order {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: white;
+        box-shadow: 0 8px 24px rgba(40,167,69,0.3);
+    }
+
+        .btn-place-order:hover {
+            background: linear-gradient(45deg, #218838, #1e7e34);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(40,167,69,0.4);
+        }
+
+    .btn-continue {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        box-shadow: 0 8px 24px rgba(102,126,234,0.3);
+    }
+
+        .btn-continue:hover {
+            background: linear-gradient(45deg, #5a67d8, #6b46c1);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(102,126,234,0.4);
+        }
+
+    .empty-cart {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #6c757d;
+    }
+
+    .empty-cart-icon {
+        font-size: 4rem;
+        color: #dee2e6;
+        margin-bottom: 2rem;
+    }
+
+    .empty-cart h3 {
+        color: #495057;
+        margin-bottom: 1rem;
+    }
+
+    .empty-cart p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+    }
+
+    .breadcrumb-nav {
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 0.75rem 1.5rem;
+        margin-bottom: 1rem;
+        text-align: left;
+    }
+
+        .breadcrumb-nav a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+            .breadcrumb-nav a:hover {
+                color: white;
+            }
+
+    
+</style>
+
+<!-- Hero Section -->
+<section class="cart-hero">
+    <div class="container hero-content">
+
+
+        <h1 class="display-5 fw-bold mb-2">
+            <i class="bi bi-cart3 me-3"></i>
+            Your Shopping Cart
+        </h1>
+        <p class="lead mb-0">
+            Review your selected movies before checkout
+            @if (Model.ShoppingCart.ShoppingCartItems.Any())
+            {
+                <span class="item-count">
+                    @Model.ShoppingCart.ShoppingCartItems.Sum(x => x.Amount)
+                    @(Model.ShoppingCart.ShoppingCartItems.Sum(x => x.Amount) == 1 ? "item" : "items")
+                </span>
+            }
+        </p>
+    </div>
+</section>
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="cart-container fade-in">
+                @if (Model.ShoppingCart.ShoppingCartItems.Any())
                 {
-                    <tr>
-                        <td class="align-middle">@item.Amount</td>
-                        <td class="align-middle">@item.Movie.Name</td>
-                        <td class="align-middle">@item.Movie.Price.ToString("c")</td>
-                        <td class="align-middle">@((item.Amount * item.Movie.Price).ToString("c"))</td>
-                        <td class="align-middle">
-                            <a class="text-danger" asp-controller="Orders" asp-action="RemoveItemFromShoppingCart"
-                               asp-route-id="@item.Movie.Id">
-                                <i class="bi bi-cart-dash"></i>
-                            </a>
-                            
-                        </td>
-                    </tr>
-                }
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="2"></td>
-                    <td><b>Total:</b></td>
-                    <td>
-                        @Model.ShoppingCartTotal.ToString("c")
-                    </td>
-                    <td></td>
-                </tr>
-            </tfoot>
-        </table>
+                    <!-- Cart Header -->
+                    <div class="cart-header">
+                        <h2 class="cart-title">
+                            <i class="bi bi-bag-check"></i>
+                            Order Summary
+                        </h2>
+                        <p class="cart-subtitle">Review your movie selections and quantities</p>
+                    </div>
 
-        <div class="text-right">
-            <div class="btn-group">
-                <a class="btn btn-outline-primary" asp-action="CompleteOrder">
-                    Place Order
-                </a>
-                <span style="padding:5px"></span>
-                <a class="btn btn-outline-success" asp-controller="Movies" asp-action="Index">
-                    Add More Items
-                </a>
+                    <!-- Cart Table -->
+                    <div class="cart-table-container">
+                        <table class="cart-table table">
+                            <thead>
+                                <tr>
+                                    <th><i class="bi bi-hash me-2"></i>Quantity</th>
+                                    <th><i class="bi bi-film me-2"></i>Movie Details</th>
+                                    <th><i class="bi bi-tag me-2"></i>Unit Price</th>
+                                    <th><i class="bi bi-calculator me-2"></i>Subtotal</th>
+                                    <th><i class="bi bi-gear me-2"></i>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ShoppingCart.ShoppingCartItems)
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="quantity-badge">@item.Amount</span>
+                                        </td>
+                                        <td>
+                                            <div class="movie-info">
+                                                <img src="@item.Movie.ImageURL"
+                                                     alt="@item.Movie.Name"
+                                                     class="movie-thumbnail"
+                                                     onerror="this.src='/images/placeholder-movie.jpg'">
+                                                <div class="movie-details">
+                                                    <h6>@item.Movie.Name</h6>
+                                                    <p class="movie-category">@item.Movie.MovieCategory</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="price-cell">@item.Movie.Price.ToString("c")</td>
+                                        <td class="subtotal-cell">@((item.Amount * item.Movie.Price).ToString("c"))</td>
+                                        <td>
+                                            <a class="remove-btn"
+                                               asp-controller="Orders"
+                                               asp-action="RemoveItemFromShoppingCart"
+                                               asp-route-id="@item.Movie.Id"
+                                               title="Remove @item.Movie.Name from cart"
+                                               onclick="return confirm('Are you sure you want to remove this item from your cart?')">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Cart Footer -->
+                    <div class="cart-footer">
+                        <!-- Total Section -->
+                        <div class="total-section">
+                            <div class="total-row">
+                                <span class="total-label">
+                                    <i class="bi bi-receipt"></i>
+                                    Total Amount:
+                                </span>
+                                <span class="total-amount">@Model.ShoppingCartTotal.ToString("c")</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <a class="action-btn btn-place-order" asp-action="CompleteOrder">
+                                <i class="bi bi-credit-card"></i>
+                                Proceed to Checkout
+                            </a>
+
+                            <a class="action-btn btn-continue" asp-controller="Movies" asp-action="Index">
+                                <i class="bi bi-plus-circle"></i>
+                                Continue Shopping
+                            </a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <!-- Empty Cart -->
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon">
+                            <i class="bi bi-cart-x"></i>
+                        </div>
+                        <h3>Your cart is empty</h3>
+                        <p>Looks like you haven't added any movies to your cart yet.</p>
+                        <a class="action-btn btn-continue" asp-controller="Movies" asp-action="Index">
+                            <i class="bi bi-film"></i>
+                            Browse Movies
+                        </a>
+                    </div>
+                }
             </div>
         </div>
-
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add smooth scroll behavior
+        document.documentElement.style.scrollBehavior = 'smooth';
+
+        // Add loading effect for images
+        const images = document.querySelectorAll('.movie-thumbnail');
+        images.forEach(img => {
+            img.addEventListener('load', function() {
+                this.style.opacity = '1';
+            });
+
+            img.style.opacity = '0';
+            img.style.transition = 'opacity 0.3s ease';
+
+            if (img.complete) {
+                img.style.opacity = '1';
+            }
+        });
+
+        // Add fade-in animation for cart items
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.8s ease';
+            observer.observe(el);
+        });
+
+        // Add confirmation for remove actions
+        document.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const movieName = this.closest('tr').querySelector('.movie-details h6').textContent;
+                if (!confirm(`Are you sure you want to remove "${movieName}" from your cart?`)) {
+                    e.preventDefault();
+                }
+            });
+        });
+    });
+</script>

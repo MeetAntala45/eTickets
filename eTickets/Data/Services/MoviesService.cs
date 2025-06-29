@@ -34,7 +34,6 @@ namespace eTickets.Data.Services
             await _context.Movies.AddAsync(newMovie);
             await _context.SaveChangesAsync();
 
-            //Add Movie Actors
             foreach (var actorId in data.ActorIds)
             {
                 var newActorMovie = new Actor_Movie()
@@ -79,7 +78,7 @@ namespace eTickets.Data.Services
                 dbMovie.Name = data.Name;
                 dbMovie.Description = data.Description;
                 dbMovie.Price = data.Price;
-                dbMovie.ImageURL = data.ImageURL;
+                dbMovie.ImageURL = string.IsNullOrEmpty(data.ImageURL) ? "/images/default.jpg" : data.ImageURL;
                 dbMovie.CinemaId = data.CinemaId;
                 dbMovie.StartDate = data.StartDate;
                 dbMovie.EndDate = data.EndDate;
@@ -88,12 +87,10 @@ namespace eTickets.Data.Services
                 await _context.SaveChangesAsync();
             }
 
-            //Remove existing actors
             var existingActorsDb = _context.Actors_Movies.Where(n => n.MovieId == data.Id).ToList();
             _context.Actors_Movies.RemoveRange(existingActorsDb);
             await _context.SaveChangesAsync();
 
-            //Add Movie Actors
             foreach (var actorId in data.ActorIds)
             {
                 var newActorMovie = new Actor_Movie()

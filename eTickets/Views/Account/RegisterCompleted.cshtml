@@ -1,8 +1,37 @@
-﻿<div class="row">
-    <div class="col-md-6 offset-3 alert alert-success text-center">
-        <h2>Your account was created successfully</h2>
-        <p>You can now log in to your account using your credentials.</p>
-        <hr />
-        <p>Thank you!</p>
+﻿<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div id="popupAlert" class="alert alert-success shadow-sm text-center py-4 px-4 rounded-4 fade-popup">
+            <h4 class="mb-3">
+                <i class="bi bi-check-circle-fill me-2"></i> Account Created Successfully
+            </h4>
+            <p class="mb-2">You can now log in using your credentials.</p>
+            <hr class="my-3" />
+            <p class="mb-0 text-muted">Thank you for joining eTickets!</p>
+        </div>
     </div>
 </div>
+
+<style>
+    .fade-popup {
+        opacity: 1;
+        transition: opacity 0.8s ease-in-out;
+    }
+
+        .fade-popup.fade-out {
+            opacity: 0;
+        }
+</style>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const alert = document.getElementById('popupAlert');
+
+        setTimeout(() => {
+            alert.classList.add('fade-out');
+
+            setTimeout(() => {
+                alert.remove();
+            }, 800);
+        }, 2000);
+    });
+</script>

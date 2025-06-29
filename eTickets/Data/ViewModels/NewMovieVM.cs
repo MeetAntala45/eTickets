@@ -1,5 +1,6 @@
 ﻿using eTickets.Data;
 using eTickets.Data.Base;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -25,9 +26,12 @@ namespace eTickets.Models
         [Required(ErrorMessage = "Price is required")]
         public double Price { get; set; }
 
-        [Display(Name = "Movie poster URL")]
-        [Required(ErrorMessage = "Movie poster URL is required")]
         public string ImageURL { get; set; }
+
+        [Display(Name = "Upload Image")]
+        [Required(ErrorMessage = "Movie poster URL is required")]
+
+        public IFormFile ImageFile { get; set; }
 
         [Display(Name = "Movie start date")]
         [Required(ErrorMessage = "Start date is required")]

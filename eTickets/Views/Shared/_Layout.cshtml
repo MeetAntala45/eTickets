@@ -3,126 +3,144 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - rentMovies</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+    <title>eTickets</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Site CSS -->
+    <link href="~/css/site.css" rel="stylesheet" />
+
     <style>
-        body, html {
-            min-height: 100vh;
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
             display: flex;
             flex-direction: column;
-            margin: 0;
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f8f9fa;
         }
 
         main {
             flex: 1;
-            margin-bottom: 500px;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        .nav-link {
+            font-size: 1rem;
+            color: #333 !important;
+        }
+
+            .nav-link:hover, .dropdown-item:hover {
+                color: #0d6efd !important;
+                background-color: #f1f1f1;
+            }
+
+        .dropdown-menu a {
+            color: #212529 !important;
+        }
+
+        .form-control {
+            width: 250px;
         }
 
         .footer {
-            background-color: #343a40;
-            color: #ffffff;
-            padding: 20px 0;
+            background-color: #f1f1f1;
+            color: #212529;
+            padding: 30px 0;
             text-align: center;
+            border-top: 1px solid #dee2e6;
         }
 
             .footer a {
-                color: #ffffff;
+                color: #212529;
+                margin: 0 10px;
                 text-decoration: none;
             }
 
                 .footer a:hover {
-                    text-decoration: underline;
+                    color: #000;
+                    text-decoration: none;
                 }
-
-        .navbar {
-            background-color: #343a40;
-        }
-
-        .navbar-brand, .nav-link {
-            color: #ffffff !important;
-        }
-
-            .nav-link:hover {
-                color: #c3c3c3 !important;
-            }
-
-        .dropdown-menu a {
-            color: #343a40 !important;
-        }
-
-        .form-control {
-            width: 300px;
-        }
     </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom shadow-sm">
             <div class="container">
-                <a class="navbar-brand" asp-controller="Movies" asp-action="Index">RentMovies</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
+                <a class="navbar-brand" asp-controller="Movies" asp-action="Index">🎬 eTickets</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Movies" asp-action="Index"><i class="bi bi-film"></i> Movies</a>
-                        </li>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        
 
                         @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                         {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="bi bi-gear"></i> Management
+                            <li class="nav-item dropdown px-5">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-gear-fill"></i> Manage
                                 </a>
-
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" asp-controller="Cinemas" asp-action="Index"><i class="bi bi-camera-reels"></i> Production Companies</a>
-                                    <a class="dropdown-item" asp-controller="Producers" asp-action="Index"><i class="bi bi-headset"></i> Producers</a>
-                                    <a class="dropdown-item" asp-controller="Actors" asp-action="Index"><i class="bi bi-person-square"></i> Actors</a>
-                                </div>
+                                <ul class="dropdown-menu mx-5" aria-labelledby="adminMenu">
+                                    <li><a class="dropdown-item" asp-controller="Cinemas" asp-action="Index"><i class="bi bi-building"></i> Companies</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Producers" asp-action="Index"><i class="bi bi-person-badge"></i> Producers</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Actors" asp-action="Index"><i class="bi bi-person-lines-fill"></i> Actors</a></li>
+                                </ul>
                             </li>
                         }
                     </ul>
 
-                    <form class="d-flex mx-auto" asp-controller="Movies" asp-action="Filter">
-                        <input name="searchString" type="text" class="form-control me-2" placeholder="Search for a movie..." aria-label="Search">
-                        <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+                    <!-- Search form -->
+                    <form class="d-flex mx-lg-3 my-2 my-lg-0" role="search" asp-controller="Movies" asp-action="Filter">
+                        <input class="form-control me-2" type="search" name="searchString" placeholder="Search movies..." aria-label="Search">
+                        <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
                     </form>
 
-                    <ul class="navbar-nav">
+                    <!-- Shopping Cart -->
+                    <ul class="navbar-nav me-3">
                         @await Component.InvokeAsync("ShoppingCartSummary")
                     </ul>
 
+                    <!-- Login/Logout -->
                     <partial name="_Identity.cshtml" />
                 </div>
             </div>
         </nav>
     </header>
 
-    <main role="main" class="container-fluid mt-4">
+    <!-- Main content -->
+    <main class="container py-4">
         @RenderBody()
     </main>
 
-    <footer class="footer">
+    <!-- Footer -->
+    <footer class="footer mt-auto">
         <div class="container">
-            <p class="mb-1">&copy; 2024 - Buy any movie on a Rent</p>
-            <p>
+            <p class="mb-2">&copy; @DateTime.Now.Year - RentMovies</p>
+            <div>
                 <a href="#">Privacy</a> |
-                <a href="#">Terms of Use</a> |
-                <a href="#">Contact Us</a>
-            </p>
+                <a href="#">Terms</a> |
+                <a href="#">Contact</a>
+            </div>
         </div>
     </footer>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

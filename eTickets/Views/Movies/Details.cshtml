@@ -4,88 +4,480 @@
     ViewData["Title"] = "Movie Details";
 }
 
-<div class="row mt-4">
-    <div class="col-md-10 offset-md-1">
-        <div class="card shadow-lg border-0">
-            <div class="row g-0">
-                <!-- Movie Header with Title -->
-                <div class="col-md-12">
-                    <div class="card-header text-white bg-secondary">
-                        <h4 class="card-title mb-0">@Model.Name</h4>
+<style>
+    .movie-details-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .movie-details-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .movie-details-card {
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        overflow: hidden;
+        border: none;
+        margin-bottom: 2rem;
+    }
+
+    .movie-poster-container {
+        position: relative;
+        background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+        padding: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 450px;
+    }
+
+    .movie-poster {
+        width: 300px;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 16px;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+        transition: transform 0.4s ease;
+    }
+
+        .movie-poster:hover {
+            transform: scale(1.05);
+        }
+
+    .movie-info-section {
+        padding: 2.5rem;
+        background: white;
+    }
+
+    .movie-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1.5rem;
+        line-height: 1.2;
+    }
+
+    .movie-description {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        color: #495057;
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-radius: 12px;
+        border-left: 4px solid #667eea;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .info-card {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 16px;
+        border-left: 4px solid #667eea;
+        transition: all 0.3s ease;
+    }
+
+        .info-card:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+    .info-label {
+        font-weight: 700;
+        color: #495057;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .info-value {
+        color: #2c3e50;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+        .info-value a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+            .info-value a:hover {
+                color: #764ba2;
+                text-decoration: underline;
+            }
+
+    .status-section {
+        text-align: center;
+        margin: 2rem 0;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+
+    .status-available {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: white;
+    }
+
+    .status-expired {
+        background: linear-gradient(45deg, #dc3545, #fd7e14);
+        color: white;
+    }
+
+    .status-upcoming {
+        background: linear-gradient(45deg, #ffc107, #fd7e14);
+        color: #212529;
+    }
+
+    .actors-section {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 20px;
+        margin: 0rem 0;
+    }
+
+    .actors-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 2rem;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    .actors-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+    }
+
+    .actor-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+        .actor-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+    .actor-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 1rem;
+        display: block;
+        border: 4px solid #667eea;
+        transition: transform 0.3s ease;
+    }
+
+    .actor-card:hover .actor-avatar {
+        transform: scale(1.1);
+    }
+
+    .actor-name {
+        font-weight: 600;
+        color: #2c3e50;
+        text-decoration: none;
+        font-size: 1.1rem;
+        transition: color 0.3s ease;
+    }
+
+        .actor-name:hover {
+            color: #667eea;
+        }
+
+    .action-footer {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        padding: 2rem;
+        border-radius: 0 0 24px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        border: none;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 1rem;
+        min-width: 160px;
+        justify-content: center;
+    }
+
+    .btn-back {
+        background: linear-gradient(45deg, #6c757d, #495057);
+        color: white;
+    }
+
+        .btn-back:hover {
+            background: linear-gradient(45deg, #5a6268, #3d4142);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+    .btn-cart {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: white;
+        flex: 1;
+        max-width: 300px;
+    }
+
+        .btn-cart:hover:not(.disabled) {
+            background: linear-gradient(45deg, #218838, #1e7e34);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-cart.disabled {
+            background: linear-gradient(45deg, #e9ecef, #dee2e6);
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+    .price-highlight {
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: #fff;
+        background: rgba(255,255,255,0.2);
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        margin-left: 0.5rem;
+    }
+
+    
+</style>
+
+
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-11">
+            <div class="movie-details-card fade-in">
+                <div class="row g-0">
+                    <!-- Movie Poster -->
+                    <div class="col-lg-4">
+                        <div class="movie-poster-container">
+                            <img src="@Model.ImageURL"
+                                 class="movie-poster"
+                                 alt="@Model.Name"
+                                 onerror="this.src='/images/placeholder-movie.jpg'">
+                        </div>
+                    </div>
+
+                    <!-- Movie Information -->
+                    <div class="col-lg-8">
+                        <div class="movie-info-section">
+                            <h1 class="movie-title">@Model.Name</h1>
+
+                            <div class="movie-description">
+                                <i class="bi bi-quote text-primary me-2" style="font-size: 1.5rem;"></i>
+                                @Model.Description
+                            </div>
+
+                            
+                            <!-- Movie Information Grid -->
+                            <div class="info-grid">
+                                <div class="info-card">
+                                    <div class="info-label">
+                                        <i class="bi bi-building"></i>
+                                        Cinema
+                                    </div>
+                                    <div class="info-value">
+                                        <a asp-controller="Cinemas" asp-action="Details" asp-route-id="@Model.CinemaId">
+                                            @Model.Cinema.Name
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="info-card">
+                                    <div class="info-label">
+                                        <i class="bi bi-person-video3"></i>
+                                        Producer
+                                    </div>
+                                    <div class="info-value">
+                                        <a asp-controller="Producers" asp-action="Details" asp-route-id="@Model.ProducerId">
+                                            @Model.Producer.FullName
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="info-card">
+                                    <div class="info-label">
+                                        <i class="bi bi-tag"></i>
+                                        Category
+                                    </div>
+                                    <div class="info-value">@Model.MovieCategory</div>
+                                </div>
+
+                                <div class="info-card">
+                                    <div class="info-label">
+                                        <i class="bi bi-calendar-event"></i>
+                                        Showing Period
+                                    </div>
+                                    <div class="info-value">
+                                        @Model.StartDate.ToString("MMM dd, yyyy") - @Model.EndDate.ToString("MMM dd, yyyy")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- Movie Image -->
-                <div class="col-md-4">
-                    <img src="@Model.ImageURL" class="img-fluid border rounded-start" alt="@Model.Name" style="object-fit: cover; width: 100%; height: 100%; padding: 10px;">
-                </div>
-                <!-- Movie Information -->
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <p class="card-text mb-3">@Model.Description</p>
-                        <p class="card-text">
-                            <strong>Cinema: </strong>
-                            <a asp-controller="Cinemas" asp-action="Details" asp-route-id="@Model.CinemaId" class="text-decoration-none">
-                                @Model.Cinema.Name
-                            </a>
-                        </p>
-                        <p class="card-text">
-                            <strong>Producer: </strong>
-                            <a asp-controller="Producers" asp-action="Details" asp-route-id="@Model.ProducerId" class="text-decoration-none">
-                                @Model.Producer.FullName
-                            </a>
-                        </p>
-                        <p class="card-text"><strong>Category: </strong>@Model.MovieCategory</p>
-                        <p class="card-text"><strong>Start Date: </strong>@Model.StartDate.ToString("dd MMM yy")</p>
-                        <p class="card-text"><strong>End Date: </strong>@Model.EndDate.ToString("dd MMM yy")</p>
 
-                        <!-- Status Badge -->
-                        <p class="card-text">
-                            <strong>Status: </strong>
-                            @if (DateTime.Now >= Model.StartDate && DateTime.Now <= Model.EndDate)
-                            {
-                                <span class="badge bg-success text-white">AVAILABLE</span>
-                            }
-                            else if (DateTime.Now > Model.EndDate)
-                            {
-                                <span class="badge bg-danger text-white">EXPIRED</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-primary text-white">UPCOMING</span>
-                            }
-                        </p>
+                <!-- Actors Section -->
+                @if (Model.Actors_Movies != null && Model.Actors_Movies.Any())
+                {
+                    <div class="actors-section">
+                        <h2 class="actors-title">
+                            <i class="bi bi-people-fill"></i>
+                            Featured Cast
+                        </h2>
 
-                        <!-- Actors -->
-                        <p class="card-text"><strong>Actors: </strong></p>
-                        <hr />
-                        <div class="row">
+                        <div class="actors-grid">
                             @foreach (var actor in Model.Actors_Movies)
                             {
-                                <div class="col-md-3 text-center mb-4">
-                                    <img class="rounded-circle img-thumbnail mb-2" src="@actor.Actor.ProfilePictureURL" style="max-width: 100px; height: 100px;" alt="@actor.Actor.FullName" />
-                                    <br />
-                                    <a asp-controller="Actors" asp-action="Details" asp-route-id="@actor.ActorId" class="text-decoration-none">
+                                <div class="actor-card">
+                                    <img class="actor-avatar"
+                                         src="@actor.Actor.ProfilePictureURL"
+                                         alt="@actor.Actor.FullName"
+                                         onerror="this.src='/images/placeholder-actor.jpg'">
+                                    <a asp-controller="Actors"
+                                       asp-action="Details"
+                                       asp-route-id="@actor.ActorId"
+                                       class="actor-name">
                                         @actor.Actor.FullName
                                     </a>
                                 </div>
                             }
                         </div>
                     </div>
-                </div>
+                }
 
-                <!-- Footer with Buttons -->
-                <div class="col-md-12">
-                    <div class="card-footer bg-light d-flex justify-content-between">
-                        <a class="btn btn-outline-secondary" asp-action="Index">
-                            <i class="bi bi-arrow-left"></i> Back to List
-                        </a>
-                        <a class="btn btn-success text-white @((DateTime.Now > Model.EndDate) ? "disabled" : "")"
-                           asp-controller="Orders" asp-action="AddItemToShoppingCart" asp-route-id="@Model.Id">
-                            <i class="bi bi-cart-plus"></i> Add to Cart (Price @Model.Price.ToString("c"))
-                        </a>
-                    </div>
+                <!-- Action Footer -->
+                <div class="action-footer">
+                    <a class="action-btn btn-back" asp-action="Index">
+                        <i class="bi bi-arrow-left"></i>
+                        Back to Movies
+                    </a>
+
+                    <a class="action-btn btn-cart @((DateTime.Now > Model.EndDate) ? "disabled" : "")"
+                       asp-controller="Orders"
+                       asp-action="AddItemToShoppingCart"
+                       asp-route-id="@Model.Id">
+                        <i class="bi bi-cart-plus"></i>
+                        @((DateTime.Now > Model.EndDate) ? "Unavailable" : "Add to Cart")
+                        @if (DateTime.Now <= Model.EndDate)
+                        {
+                            <span class="price-highlight">@Model.Price.ToString("c")</span>
+                        }
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add smooth scroll behavior
+        document.documentElement.style.scrollBehavior = 'smooth';
+
+        // Add loading effect for images
+        const images = document.querySelectorAll('img');
+        images.forEach(img => {
+            img.addEventListener('load', function() {
+                this.style.opacity = '1';
+            });
+
+            img.style.opacity = '0';
+            img.style.transition = 'opacity 0.3s ease';
+
+            if (img.complete) {
+                img.style.opacity = '1';
+            }
+        });
+
+        // Add intersection observer for fade-in animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.8s ease';
+            observer.observe(el);
+        });
+    });
+</script>

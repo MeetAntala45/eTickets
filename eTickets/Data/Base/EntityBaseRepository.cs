@@ -15,7 +15,7 @@ namespace eTickets.Data.Base
         {
             _context = context;
         }
-
+        // used for retrieving data from database
         public async Task AddAsync(T entity)
         {
             await _context.Set<T>().AddAsync(entity);

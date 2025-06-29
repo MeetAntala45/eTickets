@@ -1,0 +1,279 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "My Movies";
+}
+
+<style>
+    .movies-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding: 30px 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 12px;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .page-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+
+    .movies-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+    }
+
+    .movie-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+    }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+    .movie-image {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        position: relative;
+    }
+
+    .movie-info {
+        padding: 20px;
+    }
+
+    .movie-title {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .movie-category {
+        display: inline-block;
+        background: #667eea;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .movie-description {
+        color: #666;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 15px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .movie-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+        color: #888;
+    }
+
+    .purchase-price {
+        font-weight: bold;
+        color: #667eea;
+    }
+
+    .watch-button {
+        width: 100%;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+        .watch-button:hover {
+            background: linear-gradient(45deg, #5a67d8, #6b46c1);
+            color: white;
+            text-decoration: none;
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+
+    .empty-title {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .empty-text {
+        color: #666;
+        margin-bottom: 30px;
+    }
+
+    .browse-button {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+        .browse-button:hover {
+            background: linear-gradient(45deg, #5a67d8, #6b46c1);
+            color: white;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+
+    .stats-section {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-top: 40px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        text-align: center;
+    }
+
+    .stat-item {
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #667eea;
+        display: block;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+        margin-top: 5px;
+    }
+</style>
+
+<div class="movies-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">My Movies</h1>
+        <p class="page-subtitle">
+            Your purchased movie collection
+            @if (Model != null && Model.Any())
+            {
+                <span>(@Model.Count() movies available)</span>
+            }
+        </p>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <!-- Movies Grid -->
+        <div class="movies-grid">
+            @foreach (var movie in Model)
+            {
+                <div class="movie-card" onclick="location.href='@Url.Action("Watch", "Movies", new { id = movie.Id })'">
+                    <img src="@movie.ImageURL" alt="@movie.Name" class="movie-image"
+                         onerror="this.src='/images/placeholder-movie.jpg'">
+                    <div class="movie-info">
+                        <div class="movie-category">@movie.Category</div>
+                        <h3 class="movie-title">@movie.Name</h3>
+                        <p class="movie-description">@movie.Description</p>
+                        <div class="movie-meta">
+                            <span>Purchased: @movie.PurchaseDate.ToString("MMM dd, yyyy")</span>
+                            <span class="purchase-price">$@movie.Price</span>
+                        </div>
+                        <a href="@Url.Action("Watch", "Movies", new { id = movie.Id })" class="watch-button">
+                            ▶ Watch Now
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Statistics Section -->
+        <div class="stats-section">
+            <h3 style="text-align: center; margin-bottom: 30px; color: #333;">Collection Statistics</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">@Model.Count()</span>
+                    <div class="stat-label">Movies Owned</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">$@Model.Sum(m => (decimal)m.Price).ToString("F2")</span>
+                    <div class="stat-label">Total Value</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">@Model.Select(m => m.Category).Distinct().Count()</span>
+                    <div class="stat-label">Genres</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">@Model.Count(m => DateTime.Parse(m.EndDate.ToString()) > DateTime.Now.AddDays(30))</span>
+                    <div class="stat-label">Active Movies</div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-icon">🎬</div>
+            <h2 class="empty-title">No Movies Yet</h2>
+            <p class="empty-text">You haven't purchased any movies yet, or your purchased movies may have expired.</p>
+            <a href="@Url.Action("Index", "Movies")" class="browse-button">Browse Movies</a>
+        </div>
+    }
+</div>

@@ -2,92 +2,111 @@
 @using eTickets.Data;
 
 @{
-    ViewData["Title"] = "Create a new movie";
+    ViewData["Title"] = "Create a New Movie";
 }
 
 <div class="row justify-content-center mt-5">
-    <div class="col-md-8">
-        <div class="card shadow-lg p-4 rounded-3 border-0">
-            <h3 class="text-center mb-4 text-primary">Create a New Movie</h3>
+    <div class="col-lg-7">
+        <div class="card shadow-lg p-5 rounded-4 border-0 bg-white">
+            <h3 class="text-center text-primary fw-semibold mb-4">
+                <i class="bi bi-plus-circle-dotted me-2"></i> Create a New Movie
+            </h3>
 
             @if (TempData["Error"] != null)
             {
-                <div class="alert alert-danger text-center">
+                <div class="alert alert-danger text-center rounded-3">
                     <strong>Sorry!</strong> - @TempData["Error"]
                 </div>
             }
 
-            <form asp-action="Create">
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <form asp-action="Create" enctype="multipart/form-data">
 
-                <div class="row g-4">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                <div class="row g-3">
                     <div class="col-md-6">
-                        <div class="form-group mb-3">
-                            <label asp-for="Name" class="form-label fw-bold">Movie Name</label>
-                            <input asp-for="Name" class="form-control form-control-lg  shadow-sm" />
-                            <span asp-validation-for="Name" class="text-danger"></span>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Name" class="form-control shadow-sm" placeholder="Movie Name" />
+                            <label asp-for="Name">Movie Name</label>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
                         </div>
-                        <div class="form-group mb-3">
-                            <label asp-for="StartDate" class="form-label fw-bold">Start Date</label>
-                            <input asp-for="StartDate" type="date" class="form-control form-control-lg shadow-sm" />
-                            <span asp-validation-for="StartDate" class="text-danger"></span>
+
+                    
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="EndDate" type="date" class="form-control shadow-sm" placeholder="End Date" />
+                            <label asp-for="EndDate">End Date</label>
+                            <span asp-validation-for="EndDate" class="text-danger small"></span>
                         </div>
-                        <div class="form-group mb-3">
-                            <label asp-for="EndDate" class="form-label fw-bold">End Date</label>
-                            <input asp-for="EndDate" type="date" class="form-control form-control-lg shadow-sm" />
-                            <span asp-validation-for="EndDate" class="text-danger"></span>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Price" type="number" class="form-control shadow-sm" placeholder="Price" />
+                            <label asp-for="Price">Price</label>
+                            <span asp-validation-for="Price" class="text-danger small"></span>
                         </div>
+
                         <div class="form-group mb-3">
-                            <label asp-for="Price" class="form-label fw-bold">Price</label>
-                            <input asp-for="Price" type="number" class="form-control form-control-lg shadow-sm" />
-                            <span asp-validation-for="Price" class="text-danger"></span>
+                            <label asp-for="ImageFile" class="form-label">Upload Poster</label>
+                            <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
+                            <span asp-validation-for="ImageFile" class="text-danger"></span>
                         </div>
-                        <div class="form-group mb-3">
-                            <label asp-for="ImageURL" class="form-label fw-bold">Image URL</label>
-                            <input asp-for="ImageURL" class="form-control form-control-lg shadow-sm" />
-                            <span asp-validation-for="ImageURL" class="text-danger"></span>
-                        </div>
+
                     </div>
 
+
                     <div class="col-md-6">
-                        <div class="form-group mb-3">
-                            <label asp-for="CinemaId" class="form-label fw-bold">Cinema</label>
-                            <select asp-for="CinemaId" class="form-control form-control-lg shadow-sm" asp-items="ViewBag.Cinemas"></select>
-                            <span asp-validation-for="CinemaId" class="text-danger"></span>
+                        <div class="form-floating mb-3">
+                            <select asp-for="CinemaId" class="form-select shadow-sm" asp-items="ViewBag.Cinemas">
+                                <option disabled selected>-- Select Cinema --</option>
+                            </select>
+                            <label asp-for="CinemaId">Production Company</label>
+                            <span asp-validation-for="CinemaId" class="text-danger small"></span>
                         </div>
-                        <div class="form-group mb-3">
-                            <label asp-for="MovieCategory" class="form-label fw-bold">Category</label>
-                            <select asp-for="MovieCategory" class="form-control form-control-lg shadow-sm" asp-items="Html.GetEnumSelectList<MovieCategory>()"></select>
-                            <span asp-validation-for="MovieCategory" class="text-danger"></span>
+
+                        <div class="form-floating mb-3">
+                            <select asp-for="MovieCategory" class="form-select shadow-sm" asp-items="Html.GetEnumSelectList<MovieCategory>()">
+                                <option disabled selected>-- Select Category --</option>
+                            </select>
+                            <label asp-for="MovieCategory">Category</label>
+                            <span asp-validation-for="MovieCategory" class="text-danger small"></span>
                         </div>
-                        <div class="form-group mb-3">
-                            <label asp-for="ProducerId" class="form-label fw-bold">Producer</label>
-                            <select asp-for="ProducerId" class="form-control form-control-lg shadow-sm" asp-items="ViewBag.Producers"></select>
-                            <span asp-validation-for="ProducerId" class="text-danger"></span>
+
+                        <div class="form-floating mb-3">
+                            <select asp-for="ProducerId" class="form-select shadow-sm" asp-items="ViewBag.Producers">
+                                <option disabled selected>-- Select Producer --</option>
+                            </select>
+                            <label asp-for="ProducerId">Producer</label>
+                            <span asp-validation-for="ProducerId" class="text-danger small"></span>
                         </div>
-                        <div class="form-group mb-3">
+
+                        <div class="mb-3">
                             <label asp-for="ActorIds" class="form-label fw-bold">Actors</label>
-                            <select asp-for="ActorIds" class="form-control form-control-lg shadow-sm" asp-items="ViewBag.Actors" multiple></select>
-                            <span asp-validation-for="ActorIds" class="text-danger"></span>
+                            <select asp-for="ActorIds" multiple class="form-select shadow-sm" asp-items="ViewBag.Actors"></select>
+                            <span asp-validation-for="ActorIds" class="text-danger small"></span>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-12">
-                    <div class="form-group mb-4">
-                        <label asp-for="Description" class="form-label fw-bold">Description</label>
-                        <textarea asp-for="Description" class="form-control form-control-lg rounded-3 shadow-sm" rows="4"></textarea>
-                        <span asp-validation-for="Description" class="text-danger"></span>
-                    </div>
+                <!-- Description -->
+                <div class="form-group mt-4">
+                    <label asp-for="Description" class="form-label fw-bold">Description</label>
+                    <textarea asp-for="Description" rows="4" class="form-control shadow-sm rounded-3" placeholder="Add a brief description about the movie..."></textarea>
+                    <span asp-validation-for="Description" class="text-danger small"></span>
                 </div>
 
-                <div class="text-center mb-4">
-                    <img id="ImageUrlPreview" class="img-fluid  shadow-sm" style="max-width: 100%;" />
+                <!-- Image Preview -->
+                <div class="text-center my-4">
+                    <img id="ImageUrlPreview" class="img-fluid rounded-3 shadow-sm border" style="max-height: 300px; max-width: 100%;" />
                 </div>
 
-                <div class="d-flex justify-content-between">
-                    <a class="btn btn-outline-secondary px-4" asp-action="Index">Show All</a>
-                    <input type="submit" value="Create" class="btn btn-outline-primary px-4" />
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-between mt-4">
+                    <a class="btn btn-outline-secondary px-4" asp-action="Index">
+                        <i class="bi bi-arrow-left"></i> Show All
+                    </a>
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-check-circle me-1"></i> Create
+                    </button>
                 </div>
             </form>
         </div>
@@ -96,9 +115,14 @@
 
 @section Scripts {
     <script>
-        $("#ImageURL").on("input", function () {
-            var output = document.getElementById("ImageUrlPreview");
-            output.src = $(this).val();
+        document.addEventListener("DOMContentLoaded", function () {
+            const input = document.getElementById("ImageURL");
+            const preview = document.getElementById("ImageUrlPreview");
+            if (input && preview) {
+                input.addEventListener("input", () => {
+                    preview.src = input.value;
+                });
+            }
         });
     </script>
 }

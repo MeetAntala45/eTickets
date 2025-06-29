@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace eTickets.Controllers
 {
-    [Authorize] 
+    [Authorize]
     public class OrdersController : Controller
     {
         private readonly IMoviesService _moviesService;
