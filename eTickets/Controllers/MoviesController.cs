@@ -1,7 +1,9 @@
 ﻿using eTickets.Data;
 using eTickets.Data.Services;
 using eTickets.Data.Static;
+using eTickets.Data.ViewModels;
 using eTickets.Models;
+using eTickets.Data.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,18 +14,15 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
+
 namespace eTickets.Controllers
 {
     [Authorize(Roles = UserRoles.Admin)]
     public class MoviesController : Controller
     {
         private readonly IMoviesService _service;
-        // Add these methods to your MoviesController.cs
         private readonly AppDbContext _context;
 
-        // Update constructor to inject DbContext
         public MoviesController(IMoviesService service, AppDbContext context)
         {
             _service = service;
@@ -44,8 +43,8 @@ namespace eTickets.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-
-                var filteredResultNew = allMovies.Where(n => string.Equals(n.Name, searchString, StringComparison.CurrentCultureIgnoreCase) || string.Equals(n.Description, searchString, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                var filteredResultNew = allMovies.Where(n => string.Equals(n.Name, searchString, StringComparison.CurrentCultureIgnoreCase) ||
+                                                             string.Equals(n.Description, searchString, StringComparison.CurrentCultureIgnoreCase)).ToList();
 
                 return View("Index", filteredResultNew);
             }
@@ -53,42 +52,34 @@ namespace eTickets.Controllers
             return View("Index", allMovies);
         }
 
-        //GET: Movies/Details/1
         [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
             var movieDetail = await _service.GetMovieByIdAsync(id);
             return View(movieDetail);
         }
-        
 
         [AllowAnonymous]
         public async Task<IActionResult> MyMovies()
         {
             if (!User.Identity.IsAuthenticated)
-            {
                 return RedirectToAction("Login", "Account");
-            }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Get user's purchased movies that haven't expired
             var userMovies = await _context.Orders
                 .Include(o => o.OrderItems)
-                .ThenInclude(oi => oi.Movie)
+                    .ThenInclude(oi => oi.Movie)
                 .Where(o => o.UserId == userId)
-                .SelectMany(o => o.OrderItems)
-                .Where(oi => oi.Movie.EndDate > DateTime.Now) // Only show non-expired movies
-                .Select(oi => new
+                .SelectMany(o => o.OrderItems, (order, orderItem) => new
                 {
-                    Id = oi.Movie.Id,
-                    Name = oi.Movie.Name,
-                    Description = oi.Movie.Description,
-                    ImageURL = oi.Movie.ImageURL,
-                    Price = oi.Price,
-                    Category = oi.Movie.MovieCategory.ToString(),
-                    EndDate = oi.Movie.EndDate,
-                    PurchaseDate = DateTime.Now // You might want to add a purchase date field to Order
+                    Id = orderItem.Movie.Id,
+                    Name = orderItem.Movie.Name,
+                    Description = orderItem.Movie.Description,
+                    ImageURL = orderItem.Movie.ImageURL,
+                    Price = orderItem.Price,
+                    Category = orderItem.Movie.MovieCategory.ToString(),
+                    StartDate = DateTime.Now 
                 })
                 .ToListAsync();
 
@@ -98,49 +89,51 @@ namespace eTickets.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Watch(int id)
         {
-            if (!User.Identity.IsAuthenticated)
+            try
             {
-                return RedirectToAction("Login", "Account");
-            }
+                if (!User.Identity.IsAuthenticated)
+                    return RedirectToAction("Login", "Account");
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Check if user has purchased this movie and it's not expired
-            var userMovie = await _context.Orders
-                .Include(o => o.OrderItems)
-                .ThenInclude(oi => oi.Movie)
-                .ThenInclude(m => m.Cinema)
-                .Include(o => o.OrderItems)
-                .ThenInclude(oi => oi.Movie)
-                .ThenInclude(m => m.Producer)
-                .Where(o => o.UserId == userId)
-                .SelectMany(o => o.OrderItems)
-                .Where(oi => oi.MovieId == id && oi.Movie.EndDate > DateTime.Now)
-                .Select(oi => new
+                var userMovie = await _context.Orders
+                    .Include(o => o.OrderItems)
+                        .ThenInclude(oi => oi.Movie)
+                            .ThenInclude(m => m.Cinema)
+                    .Include(o => o.OrderItems)
+                        .ThenInclude(oi => oi.Movie)
+                            .ThenInclude(m => m.Producer)
+                    .Where(o => o.UserId == userId)
+                    .SelectMany(o => o.OrderItems, (order, orderItem) => new MovieWatchViewModel
+                    {
+                        MovieId = orderItem.Movie.Id,
+                        Name = orderItem.Movie.Name,
+                        Description = orderItem.Movie.Description,
+                        ImageURL = orderItem.Movie.ImageURL,
+                        Price = orderItem.Price,
+                        Category = orderItem.Movie.MovieCategory.ToString(),
+                        StartDate = orderItem.Movie.StartDate,
+                        OrderDate = order.OrderDate,
+                        Cinema = orderItem.Movie.Cinema.Name,
+                        Producer = orderItem.Movie.Producer.FullName
+                    })
+                    .Where(m => m.MovieId == id && m.OrderDate.AddDays(7) >= DateTime.Now)
+                    .FirstOrDefaultAsync();
+
+                if (userMovie == null)
                 {
-                    Id = oi.Movie.Id,
-                    Name = oi.Movie.Name,
-                    Description = oi.Movie.Description,
-                    ImageURL = oi.Movie.ImageURL,
-                    Price = oi.Price,
-                    Category = oi.Movie.MovieCategory.ToString(),
-                    EndDate = oi.Movie.EndDate,
-                    StartDate = oi.Movie.StartDate,
-                    Cinema = oi.Movie.Cinema.Name,
-                    Producer = oi.Movie.Producer.FullName
-                })
-                .FirstOrDefaultAsync();
+                    TempData["Error"] = "You do not have access to this movie or it has expired.";
+                    return RedirectToAction("MyMovies");
+                }
 
-            if (userMovie == null)
-            {
-                TempData["Error"] = "Movie not found or access denied.";
-                return RedirectToAction("MyMovies");
+                return View(userMovie);
             }
-
-            return View(userMovie);
+            catch (Exception ex)
+            {
+                return Content($"Exception: {ex.Message}");
+            }
         }
 
-        //GET: Movies/Create
         public async Task<IActionResult> Create()
         {
             var movieDropdownsData = await _service.GetNewMovieDropdownsValues();
@@ -166,16 +159,13 @@ namespace eTickets.Controllers
                 return View(movie);
             }
 
-            // Handle Image Upload
             if (movie.ImageFile != null)
             {
                 string wwwRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
                 string imagesPath = Path.Combine(wwwRootPath, "images");
 
                 if (!Directory.Exists(imagesPath))
-                {
                     Directory.CreateDirectory(imagesPath);
-                }
 
                 string uniqueFileName = Guid.NewGuid().ToString() + "_" + movie.ImageFile.FileName;
                 string filePath = Path.Combine(imagesPath, uniqueFileName);
@@ -185,7 +175,6 @@ namespace eTickets.Controllers
                     await movie.ImageFile.CopyToAsync(stream);
                 }
 
-                // Set image path in the ViewModel
                 movie.ImageURL = "/images/" + uniqueFileName;
             }
 
@@ -193,7 +182,6 @@ namespace eTickets.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        //GET: Movies/Edit/1
         public async Task<IActionResult> Edit(int id)
         {
             var movieDetails = await _service.GetMovieByIdAsync(id);
@@ -206,7 +194,6 @@ namespace eTickets.Controllers
                 Description = movieDetails.Description,
                 Price = movieDetails.Price,
                 StartDate = movieDetails.StartDate,
-                EndDate = movieDetails.EndDate,
                 ImageURL = movieDetails.ImageURL,
                 MovieCategory = movieDetails.MovieCategory,
                 CinemaId = movieDetails.CinemaId,

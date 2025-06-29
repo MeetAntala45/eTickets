@@ -342,7 +342,7 @@
                     </div>
                     <div class="meta-item">
                         <span class="meta-label">Available Until:</span>
-                        <span>@DateTime.Parse(Model.EndDate.ToString()).ToString("MMMM dd, yyyy")</span>
+                        <span>@Model.PurchaseDate.AddDays(7).ToString("MMMM dd, yyyy")</span>
                     </div>
                 </div>
 

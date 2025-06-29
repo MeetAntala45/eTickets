@@ -232,7 +232,7 @@
                         <h3 class="movie-title">@movie.Name</h3>
                         <p class="movie-description">@movie.Description</p>
                         <div class="movie-meta">
-                            <span>Purchased: @movie.PurchaseDate.ToString("MMM dd, yyyy")</span>
+                            <span>Purchased: @movie.StartDate.ToString("MMM dd, yyyy")</span>
                             <span class="purchase-price">$@movie.Price</span>
                         </div>
                         <a href="@Url.Action("Watch", "Movies", new { id = movie.Id })" class="watch-button">
@@ -256,12 +256,9 @@
                     <div class="stat-label">Total Value</div>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-number">@Model.Select(m => m.Category).Distinct().Count()</span>
-                    <div class="stat-label">Genres</div>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">@Model.Count(m => DateTime.Parse(m.EndDate.ToString()) > DateTime.Now.AddDays(30))</span>
-                    <div class="stat-label">Active Movies</div>
+                    <span class="stat-number">
+                        @Model.Count(m => m.StartDate.AddDays(7) > DateTime.Now)
+                    </span>                    <div class="stat-label">Active Movies</div>
                 </div>
             </div>
         </div>

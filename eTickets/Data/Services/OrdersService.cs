@@ -34,6 +34,8 @@ namespace eTickets.Data.Services
                 UserId = userId,
                 Email = userEmailAddress
             };
+            order.OrderDate = DateTime.Now;
+
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
 
@@ -45,6 +47,7 @@ namespace eTickets.Data.Services
                     MovieId = item.Movie.Id,
                     OrderId = order.Id,
                     Price = item.Movie.Price
+
                 };
                 await _context.OrderItems.AddAsync(orderItem);
             }

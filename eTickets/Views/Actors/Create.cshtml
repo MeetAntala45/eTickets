@@ -1,63 +1,78 @@
 ﻿@model Actor
 
 @{
-    ViewData["Title"] = "Add a new actor";
+    ViewData["Title"] = "Add a New Actor";
 }
 
-<div class="row justify-content-center mt-5">
-    <div class="col-md-6">
-        <div class="card shadow-lg p-4 rounded-3 border-0">
-            <h3 class="text-center mb-4 text-primary">Add a New Actor</h3>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-8 col-sm-12">
+            <div class="card shadow-lg p-5 border-0 rounded-4 bg-light">
+                <h3 class="text-center mb-4 text-primary fw-bold">
+                    <i class="bi bi-person-plus me-2"></i> Add a New Actor
+                </h3>
 
-            <form asp-action="Create">
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <form asp-action="Create" class="needs-validation" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                <!-- Profile Picture Preview -->
-                <div class="text-center mb-4">
-                    <img id="ProfilePicturePreview" class="border-info rounded-circle shadow-sm" style="width: 150px; height: 150px; object-fit: cover;" />
-                </div>
+                    <!-- Profile Picture Preview -->
+                    <div class="text-center mb-4">
+                        <img id="ProfilePicturePreview"
+                             src="https://via.placeholder.com/150"
+                             class="border rounded-circle shadow"
+                             style="width: 150px; height: 150px; object-fit: cover;"
+                             alt="Preview Image" />
+                    </div>
 
-                <!-- Profile Picture URL Input -->
-                <div class="form-group mb-3">
-                    <label asp-for="ProfilePictureURL" class="form-label fw-bold">Profile Picture URL</label>
-                    <input asp-for="ProfilePictureURL" class="form-control form-control-lg rounded-pill shadow-sm" />
-                    <span asp-validation-for="ProfilePictureURL" class="text-danger"></span>
-                </div>
+                    <!-- Profile Picture URL -->
+                    <div class="form-group mb-4">
+                        <label asp-for="ProfilePictureURL" class="form-label fw-semibold">Profile Picture URL</label>
+                        <input asp-for="ProfilePictureURL" class="form-control" placeholder="Paste image URL" required />
+                        <span asp-validation-for="ProfilePictureURL" class="text-danger"></span>
+                        <small class="form-text text-muted">Paste a valid image link (e.g., from Unsplash or Imgur).</small>
+                    </div>
 
-                <!-- Full Name Input -->
-                <div class="form-group mb-3">
-                    <label asp-for="FullName" class="form-label fw-bold">Full Name</label>
-                    <input asp-for="FullName" class="form-control form-control-lg rounded-pill shadow-sm" />
-                    <span asp-validation-for="FullName" class="text-danger"></span>
-                </div>
+                    <!-- Full Name -->
+                    <div class="form-group mb-4">
+                        <label asp-for="FullName" class="form-label fw-semibold">Full Name</label>
+                        <input asp-for="FullName" class="form-control" placeholder="Enter full name" required />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
 
-                <!-- Bio Input -->
-                <div class="form-group mb-4">
-                    <label asp-for="Bio" class="form-label fw-bold">Bio</label>
-                    <input asp-for="Bio" class="form-control form-control-lg rounded-pill shadow-sm" />
-                    <span asp-validation-for="Bio" class="text-danger"></span>
-                </div>
+                    <!-- Biography -->
+                    <div class="form-group mb-4">
+                        <label asp-for="Bio" class="form-label fw-semibold">Biography</label>
+                        <textarea asp-for="Bio" class="form-control" rows="4" placeholder="Write a short biography" required></textarea>
+                        <span asp-validation-for="Bio" class="text-danger"></span>
+                    </div>
 
-                <!-- Submit and Show All Buttons -->
-                <div class="d-flex justify-content-between">
-                    <a class="btn btn-outline-secondary rounded-pill px-4" asp-action="Index">Show All</a>
-                    <input type="submit" value="Create" class="btn btn-outline-primary rounded-pill px-4" />
-                </div>
-            </form>
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-outline-dark rounded-pill px-4">
+                            <i class="bi bi-arrow-left"></i> Back
+                        </a>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4">
+                            <i class="bi bi-check-circle"></i> Create
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
+        // Preview profile picture from URL
         $(document).ready(function () {
-            var output = document.getElementById('ProfilePicturePreview');
-            output.src = $("#ProfilePictureURL").val();
-        });
+            const preview = document.getElementById('ProfilePicturePreview');
+            const input = $('#ProfilePictureURL');
 
-        $("#ProfilePictureURL").on("input", function () {
-            var output = document.getElementById('ProfilePicturePreview');
-            output.src = $(this).val();
+            preview.src = input.val(); // initialize preview
+
+            input.on("input", function () {
+                preview.src = $(this).val();
+            });
         });
     </script>
 }

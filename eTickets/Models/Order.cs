@@ -17,7 +17,9 @@ namespace eTickets.Models
         public string UserId { get; set; }
         [ForeignKey(nameof(UserId))]
         public ApplicationUser User { get; set; }
+        public DateTime OrderDate { get; set; } // <-- Important for purchase tracking
 
         public List<OrderItem> OrderItems { get; set; }
+
     }
 }

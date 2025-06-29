@@ -4,46 +4,59 @@
     ViewData["Title"] = "Add a Production Company";
 }
 
-<div class="row justify-content-center mt-5">
-    <div class="col-md-6">
-        <div class="card shadow-lg p-4 rounded-3 border-0">
-            <h3 class="text-center mb-4 text-primary">Add a New Cinema</h3>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-8 col-sm-12">
+            <div class="card shadow-lg p-5 border-0 rounded-4 bg-light">
+                <h3 class="text-center mb-4 text-primary fw-bold">
+                    <i class="bi bi-building me-2"></i> Add a Production Company
+                </h3>
 
-            <form asp-action="Create">
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <form asp-action="Create" class="needs-validation" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                <!-- Cinema Logo Preview -->
-                <div class="text-center mb-4">
-                    <img id="CinemaLogoPreview" class="border-info rounded-circle shadow-sm" style="width: 150px; height: 150px; object-fit: cover;" />
-                </div>
+                    <!-- Logo Preview -->
+                    <div class="text-center mb-4">
+                        <img id="CinemaLogoPreview"
+                             src="https://via.placeholder.com/150"
+                             class="border rounded-circle shadow"
+                             style="width: 150px; height: 150px; object-fit: cover;"
+                             alt="Logo Preview" />
+                    </div>
 
-                <!-- Cinema Logo URL Input -->
-                <div class="form-group mb-3">
-                    <label asp-for="Logo" class="form-label fw-bold">Logo URL</label>
-                    <input asp-for="Logo" class="form-control form-control-lg rounded-pill shadow-sm" />
-                    <span asp-validation-for="Logo" class="text-danger"></span>
-                </div>
+                    <!-- Logo URL -->
+                    <div class="form-group mb-4">
+                        <label asp-for="Logo" class="form-label fw-semibold">Logo URL</label>
+                        <input asp-for="Logo" class="form-control" placeholder="Paste logo URL" required />
+                        <span asp-validation-for="Logo" class="text-danger"></span>
+                        <small class="form-text text-muted">Paste a valid image link for your company's logo.</small>
+                    </div>
 
-                <!-- Cinema Name Input -->
-                <div class="form-group mb-3">
-                    <label asp-for="Name" class="form-label fw-bold">Comapny Name</label>
-                    <input asp-for="Name" class="form-control form-control-lg rounded-pill shadow-sm" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
+                    <!-- Company Name -->
+                    <div class="form-group mb-4">
+                        <label asp-for="Name" class="form-label fw-semibold">Company Name</label>
+                        <input asp-for="Name" class="form-control" placeholder="Enter company name" required />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
 
-                <!-- Cinema Description Input -->
-                <div class="form-group mb-4">
-                    <label asp-for="Description" class="form-label fw-bold">Description</label>
-                    <input asp-for="Description" class="form-control form-control-lg rounded-pill shadow-sm" />
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                </div>
+                    <!-- Description -->
+                    <div class="form-group mb-4">
+                        <label asp-for="Description" class="form-label fw-semibold">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Describe the company" required></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
 
-                <!-- Submit and Show All Buttons -->
-                <div class="d-flex justify-content-between">
-                    <a class="btn btn-outline-secondary rounded-pill px-4" asp-action="Index">Show All</a>
-                    <input type="submit" value="Create" class="btn btn-outline-primary rounded-pill px-4" />
-                </div>
-            </form>
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-outline-dark rounded-pill px-4">
+                            <i class="bi bi-arrow-left"></i> Back
+                        </a>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4">
+                            <i class="bi bi-check-circle"></i> Create
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -51,13 +64,14 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            var output = document.getElementById('CinemaLogoPreview');
-            output.src = $("#Logo").val();
-        });
+            const preview = document.getElementById('CinemaLogoPreview');
+            const input = $('#Logo');
 
-        $("#Logo").on("input", function () {
-            var output = document.getElementById('CinemaLogoPreview');
-            output.src = $(this).val();
+            preview.src = input.val();
+
+            input.on("input", function () {
+                preview.src = $(this).val();
+            });
         });
     </script>
 }

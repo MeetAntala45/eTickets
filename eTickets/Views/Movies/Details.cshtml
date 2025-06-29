@@ -373,10 +373,11 @@
                                 <div class="info-card">
                                     <div class="info-label">
                                         <i class="bi bi-calendar-event"></i>
-                                        Showing Period
+                                        Duration
                                     </div>
                                     <div class="info-value">
-                                        @Model.StartDate.ToString("MMM dd, yyyy") - @Model.EndDate.ToString("MMM dd, yyyy")
+                                        @DateTime.Now.ToString("MMM dd, yyyy") - @(DateTime.Now.AddDays(7).ToString("MMM dd, yyyy"))
+
                                     </div>
                                 </div>
                             </div>
@@ -419,18 +420,21 @@
                         <i class="bi bi-arrow-left"></i>
                         Back to Movies
                     </a>
-
-                    <a class="action-btn btn-cart @((DateTime.Now > Model.EndDate) ? "disabled" : "")"
+                    @if (!User.IsInRole("Admin")){
+                    <a class="action-btn btn-cart"
                        asp-controller="Orders"
                        asp-action="AddItemToShoppingCart"
                        asp-route-id="@Model.Id">
                         <i class="bi bi-cart-plus"></i>
-                        @((DateTime.Now > Model.EndDate) ? "Unavailable" : "Add to Cart")
-                        @if (DateTime.Now <= Model.EndDate)
-                        {
+
                             <span class="price-highlight">@Model.Price.ToString("c")</span>
-                        }
-                    </a>
+
+                    </a>}
+                    @if (User.IsInRole("Admin")){
+                        <a class="action-btn btn-cart">
+                                <span class="price-highlight">@Model.Price.ToString("c")</span>
+                        </a>
+                    }
                 </div>
             </div>
         </div>

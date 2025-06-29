@@ -1,41 +1,58 @@
 ﻿@model Producer
 
 @{
-    ViewData["Title"] = "Update producer";
+    ViewData["Title"] = "Edit Producer";
 }
 
-<div class="row text">
-    <div class="col-md-8 offset-2">
-        <p>
-            <h1>Update Producer</h1>
-        </p>
-        <div class="row">
-            <div class="col-md-8 offset-2">
-                <form asp-action="Edit">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-8 col-sm-12">
+            <div class="card shadow-lg p-5 border-0 rounded-4 bg-light">
+                <h3 class="text-center mb-4 text-primary fw-bold">
+                    <i class="bi bi-person-badge me-2"></i> Edit Producer
+                </h3>
 
-                    <div class="form-group text-center">
-                        <img id="ProfilePicturePreview"  class="border-info rounded-circle" style="max-width: 150px" />
+                <form asp-action="Edit" class="needs-validation" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <!-- Profile Picture Preview -->
+                    <div class="text-center mb-4">
+                        <img id="ProfilePicturePreview"
+                             src="@Model.ProfilePictureURL"
+                             class="border rounded-circle shadow"
+                             style="width: 150px; height: 150px; object-fit: cover;"
+                             alt="Profile Preview" />
                     </div>
-                    <div class="form-group">
-                        <label asp-for="ProfilePictureURL" class="control-label"></label>
-                        <input asp-for="ProfilePictureURL" class="form-control" />
+
+                    <!-- Profile Picture URL -->
+                    <div class="form-group mb-4">
+                        <label asp-for="ProfilePictureURL" class="form-label fw-semibold">Profile Picture URL</label>
+                        <input asp-for="ProfilePictureURL" class="form-control" placeholder="Update profile URL" required />
                         <span asp-validation-for="ProfilePictureURL" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="FullName" class="control-label"></label>
-                        <input asp-for="FullName" class="form-control" />
+
+                    <!-- Full Name -->
+                    <div class="form-group mb-4">
+                        <label asp-for="FullName" class="form-label fw-semibold">Full Name</label>
+                        <input asp-for="FullName" class="form-control" placeholder="Update name" required />
                         <span asp-validation-for="FullName" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="Bio" class="control-label"></label>
-                        <input asp-for="Bio" class="form-control" />
+
+                    <!-- Bio -->
+                    <div class="form-group mb-4">
+                        <label asp-for="Bio" class="form-label fw-semibold">Biography</label>
+                        <textarea asp-for="Bio" class="form-control" rows="4" placeholder="Update bio" required></textarea>
                         <span asp-validation-for="Bio" class="text-danger"></span>
                     </div>
 
-                    <div class="form-group">
-                        <input type="submit" value="Update" class="btn btn-outline-success float-right" />
-                        <a class="btn btn-outline-secondary" asp-action="Index">Show All</a>
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-outline-dark rounded-pill px-4">
+                            <i class="bi bi-arrow-left"></i> Back
+                        </a>
+                        <button type="submit" class="btn btn-success rounded-pill px-4">
+                            <i class="bi bi-save"></i> Update
+                        </button>
                     </div>
                 </form>
             </div>
@@ -43,17 +60,17 @@
     </div>
 </div>
 
-@section Scripts{ 
+@section Scripts {
     <script>
-
         $(document).ready(function () {
-            var output = document.getElementById('ProfilePicturePreview');
-            output.src = $("#ProfilePictureURL").val();
-        })
+            const preview = document.getElementById('ProfilePicturePreview');
+            const input = $('#ProfilePictureURL');
 
-        $("#ProfilePictureURL").on("change", function () {
-            var output = document.getElementById('ProfilePicturePreview');
-            output.src = $(this).val();
-        })
+            preview.src = input.val();
+
+            input.on("input", function () {
+                preview.src = $(this).val();
+            });
+        });
     </script>
 }

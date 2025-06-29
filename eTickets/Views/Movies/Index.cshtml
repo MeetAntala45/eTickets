@@ -5,237 +5,237 @@
 
 <style>
     .movie-hero {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 4rem 0 3rem;
-        margin-bottom: 3rem;
-        position: relative;
-        overflow: hidden;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 4rem 0 3rem;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
     }
 
-        .movie-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="30" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
-        }
+    .movie-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="30" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+    }
 
     .hero-content {
-        position: relative;
-        z-index: 2;
+    position: relative;
+    z-index: 2;
     }
 
     .movie-card {
-        transition: all 0.4s ease;
-        border: none;
-        background: white;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        position: relative;
+    transition: all 0.4s ease;
+    border: none;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    position: relative;
     }
 
-        .movie-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
+    .movie-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
 
     .movie-image-container {
-        position: relative;
-        background: linear-gradient(45deg, #f8f9fa, #e9ecef);
-        height: 250px;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    position: relative;
+    background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+    height: 250px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     }
 
     .movie-image {
-        width: 330px;
-        height: 200px;
-        object-fit: cover;
-        transition: transform 0.4s ease;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 330px;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     .movie-card:hover .movie-image {
-        transform: scale(1.05);
+    transform: scale(1.05);
     }
 
     .admin-edit-btn {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.95);
-        border: none;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.95);
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
     }
 
-        .admin-edit-btn:hover {
-            background: white;
-            transform: scale(1.1);
-        }
+    .admin-edit-btn:hover {
+    background: white;
+    transform: scale(1.1);
+    }
 
     .movie-content {
-        padding: 1.5rem;
+    padding: 1.5rem;
     }
 
     .movie-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #2c3e50;
-        margin-bottom: 0.75rem;
-        line-height: 1.3;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
     }
 
     .movie-description {
-        color: #6c757d;
-        font-size: 0.9rem;
-        line-height: 1.5;
-        margin-bottom: 1.25rem;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+    color: #6c757d;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
     }
 
     .movie-info {
-        background: #f8f9fa;
-        border-radius: 12px;
-        padding: 1rem;
-        margin-bottom: 1.25rem;
-        border-left: 4px solid #667eea;
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+    border-left: 4px solid #667eea;
     }
 
     .info-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.5rem;
-        font-size: 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
     }
 
-        .info-item:last-child {
-            margin-bottom: 0;
-        }
+    .info-item:last-child {
+    margin-bottom: 0;
+    }
 
     .info-label {
-        font-weight: 600;
-        color: #495057;
+    font-weight: 600;
+    color: #495057;
     }
 
     .info-value {
-        color: #6c757d;
-        text-align: right;
-        flex: 1;
-        margin-left: 1rem;
+    color: #6c757d;
+    text-align: right;
+    flex: 1;
+    margin-left: 1rem;
     }
 
-  
+
     .movie-actions {
-        display: flex;
-        gap: 0.75rem;
-        padding: 0 1.5rem 1.5rem;
+    display: flex;
+    gap: 0.75rem;
+    padding: 0 1.5rem 1.5rem;
     }
 
     .action-btn {
-        flex: 1;
-        padding: 0.75rem 1rem;
-        border-radius: 12px;
-        border: none;
-        font-weight: 600;
-        text-decoration: none;
-        text-align: center;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        font-size: 0.9rem;
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    border: none;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
     }
 
     .btn-details {
-        background: linear-gradient(45deg, #6c757d, #495057);
-        color: white;
+    background: linear-gradient(45deg, #6c757d, #495057);
+    color: white;
     }
 
-        .btn-details:hover {
-            background: linear-gradient(45deg, #5a6268, #3d4142);
-            color: white;
-            transform: translateY(-2px);
-        }
+    .btn-details:hover {
+    background: linear-gradient(45deg, #5a6268, #3d4142);
+    color: white;
+    transform: translateY(-2px);
+    }
 
     .btn-cart {
-        background: linear-gradient(45deg, #28a745, #20c997);
-        color: white;
-        position: relative;
-        overflow: hidden;
+    background: linear-gradient(45deg, #28a745, #20c997);
+    color: white;
+    position: relative;
+    overflow: hidden;
     }
 
-        .btn-cart:hover:not(.disabled) {
-            background: linear-gradient(45deg, #218838, #1e7e34);
-            color: white;
-            transform: translateY(-2px);
-        }
+    .btn-cart:hover:not(.disabled) {
+    background: linear-gradient(45deg, #218838, #1e7e34);
+    color: white;
+    transform: translateY(-2px);
+    }
 
-        .btn-cart.disabled {
-            background: #e9ecef;
-            color: #6c757d;
-            cursor: not-allowed;
-        }
+    .btn-cart.disabled {
+    background: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+    }
 
     .price-tag {
-        font-weight: 700;
-        font-size: 1rem;
+    font-weight: 700;
+    font-size: 1rem;
     }
 
     .section-header {
-        text-align: center;
-        margin-bottom: 3rem;
+    text-align: center;
+    margin-bottom: 3rem;
     }
 
     .section-title {
-        font-size: 2.5rem;
-        font-weight: 800;
-        background: linear-gradient(45deg, #667eea, #764ba2);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 1rem;
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
     }
 
     .section-subtitle {
-        color: #6c757d;
-        font-size: 1.1rem;
-        max-width: 600px;
-        margin: 0 auto;
-        line-height: 1.6;
+    color: #6c757d;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
     }
 
     .movies-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: 2rem;
-        padding: 0 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    padding: 0 1rem;
     }
 
-    
+
 </style>
 
 <!-- Hero Section -->
@@ -274,18 +274,18 @@
                 <!-- Movie Image -->
                 <div class="movie-image-container">
                     <img src="@item.ImageURL"
-                         alt="@item.Name"
-                         class="movie-image"
-                         loading="lazy"
-                         onerror="this.src='/images/placeholder-movie.jpg'">
+                    alt="@item.Name"
+                    class="movie-image"
+                    loading="lazy"
+                    onerror="this.src='/images/placeholder-movie.jpg'">
 
                     @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                     {
                         <a asp-action="Edit"
-                           asp-route-id="@item.Id"
-                           class="admin-edit-btn"
-                           title="Edit Movie"
-                           aria-label="Edit @item.Name">
+                        asp-route-id="@item.Id"
+                        class="admin-edit-btn"
+                        title="Edit Movie"
+                        aria-label="Edit @item.Name">
                             <i class="bi bi-pencil-fill text-primary"></i>
                         </a>
                     }
@@ -323,32 +323,46 @@
                             </span>
                             <span class="info-value">
                                 @DateTime.Now.ToString("MMM dd, yyyy")
-                                - @item.EndDate.ToString("MMM dd, yyyy")
+                                - @(DateTime.Now.AddDays(7).ToString("MMM dd, yyyy"))
+
                             </span>
                         </div>
 
-                        
+
                     </div>
                 </div>
 
                 <!-- Action Buttons -->
                 <div class="movie-actions">
                     <a class="action-btn btn-details"
-                       asp-action="Details"
-                       asp-route-id="@item.Id"
-                       title="View details for @item.Name">
+                    asp-action="Details"
+                    asp-route-id="@item.Id"
+                    title="View details for @item.Name">
                         <i class="bi bi-eye"></i>
                         Details
                     </a>
+                    @if (!User.IsInRole("Admin"))
+                    {
+                        <a class="action-btn btn-cart"
+                        asp-controller="Orders"
+                        asp-action="AddItemToShoppingCart"
+                        asp-route-id="@item.Id"
+                        >
 
-                    <a class="action-btn btn-cart @((DateTime.Now > item.EndDate) ? "disabled" : "")"
-                       asp-controller="Orders"
-                       asp-action="AddItemToShoppingCart"
-                       asp-route-id="@item.Id"
-                       title="@((DateTime.Now > item.EndDate) ? "This movie is no longer available" : $"Add {item.Name} to cart for {item.Price:c}")">
+                            <i class="bi bi-cart-plus"></i>
+                            <span class="price-tag">@item.Price.ToString("c")</span>
+
+                        </a>}
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a class="action-btn btn-cart ">
+                            
+                     
                         <i class="bi bi-cart-plus"></i>
                         <span class="price-tag">@item.Price.ToString("c")</span>
+                        
                     </a>
+                    }
                 </div>
             </article>
         }

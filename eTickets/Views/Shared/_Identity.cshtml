@@ -23,28 +23,31 @@ else
         <!-- Profile Dropdown -->
         <div class="dropdown me-2">
             <button class="btn btn-light dropdown-toggle d-flex align-items-center shadow-sm" type="button"
-                    id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false"
-                    style="border-radius: 8px; padding: 8px 16px;">
+            id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+            style="border-radius: 8px; padding: 8px 16px;">
                 <i class="bi bi-person-circle me-2" style="font-size: 1.2rem;"></i>
                 <span>@fullName</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="profileDropdown">
-                <li>
-                    <a class="dropdown-item" asp-controller="Orders" asp-action="Index">
-                        <i class="bi bi-receipt me-2"></i> My Orders
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item" asp-controller="Movies" asp-action="MyMovies">
-                        <i class="bi bi-collection-play me-2"></i> My Movies
-                    </a>
-                </li>
-                <li><hr class="dropdown-divider"></li>
+                @if (!User.IsInRole("Admin"))
+                {
+                    <li>
+                        <a class="dropdown-item" asp-controller="Orders" asp-action="Index">
+                            <i class="bi bi-receipt me-2"></i> My Orders
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" asp-controller="Movies" asp-action="MyMovies">
+                            <i class="bi bi-collection-play me-2"></i> My Movies
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                }
                 @if (User.IsInRole("Admin"))
                 {
                     <li>
                         <a class="dropdown-item" asp-controller="Account" asp-action="Users">
-                            <i class="bi bi-people me-2"></i> Manage Users
+                            <i class="bi bi-people me-2"></i> Users
                         </a>
                     </li>
                     <li><hr class="dropdown-divider"></li>

@@ -27,7 +27,6 @@ namespace eTickets.Data.Services
                 ImageURL = data.ImageURL,
                 CinemaId = data.CinemaId,
                 StartDate = data.StartDate,
-                EndDate = data.EndDate,
                 MovieCategory = data.MovieCategory,
                 ProducerId = data.ProducerId
             };
@@ -81,7 +80,6 @@ namespace eTickets.Data.Services
                 dbMovie.ImageURL = string.IsNullOrEmpty(data.ImageURL) ? "/images/default.jpg" : data.ImageURL;
                 dbMovie.CinemaId = data.CinemaId;
                 dbMovie.StartDate = data.StartDate;
-                dbMovie.EndDate = data.EndDate;
                 dbMovie.MovieCategory = data.MovieCategory;
                 dbMovie.ProducerId = data.ProducerId;
                 await _context.SaveChangesAsync();
