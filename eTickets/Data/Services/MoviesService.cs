@@ -70,35 +70,74 @@ namespace eTickets.Data.Services
 
         public async Task UpdateMovieAsync(NewMovieVM data)
         {
-            var dbMovie = await _context.Movies.FirstOrDefaultAsync(n => n.Id == data.Id);
+            // Start a transaction to ensure data consistency
+            using var transaction = await _context.Database.BeginTransactionAsync();
 
-            if(dbMovie != null)
+            try
             {
-                dbMovie.Name = data.Name;
-                dbMovie.Description = data.Description;
-                dbMovie.Price = data.Price;
-                dbMovie.ImageURL = string.IsNullOrEmpty(data.ImageURL) ? "/images/default.jpg" : data.ImageURL;
-                dbMovie.CinemaId = data.CinemaId;
-                dbMovie.StartDate = data.StartDate;
-                dbMovie.MovieCategory = data.MovieCategory;
-                dbMovie.ProducerId = data.ProducerId;
-                await _context.SaveChangesAsync();
-            }
+                var dbMovie = await _context.Movies.FirstOrDefaultAsync(n => n.Id == data.Id);
 
-            var existingActorsDb = _context.Actors_Movies.Where(n => n.MovieId == data.Id).ToList();
-            _context.Actors_Movies.RemoveRange(existingActorsDb);
-            await _context.SaveChangesAsync();
-
-            foreach (var actorId in data.ActorIds)
-            {
-                var newActorMovie = new Actor_Movie()
+                if (dbMovie != null)
                 {
-                    MovieId = data.Id,
-                    ActorId = actorId
-                };
-                await _context.Actors_Movies.AddAsync(newActorMovie);
+                    dbMovie.Name = data.Name;
+                    dbMovie.Description = data.Description;
+                    dbMovie.Price = data.Price;
+
+                    // Only update ImageURL if a new one is provided
+                    if (!string.IsNullOrEmpty(data.ImageURL))
+                    {
+                        dbMovie.ImageURL = data.ImageURL;
+                    }
+
+                    dbMovie.CinemaId = data.CinemaId;
+                    dbMovie.StartDate = data.StartDate;
+                    dbMovie.MovieCategory = data.MovieCategory;
+                    dbMovie.ProducerId = data.ProducerId;
+
+                    // Mark the entity as modified
+                    _context.Movies.Update(dbMovie);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new ArgumentException($"Movie with ID {data.Id} not found.");
+                }
+
+                // Remove existing actor relationships
+                var existingActorsDb = await _context.Actors_Movies
+                    .Where(n => n.MovieId == data.Id)
+                    .ToListAsync();
+
+                if (existingActorsDb.Any())
+                {
+                    _context.Actors_Movies.RemoveRange(existingActorsDb);
+                    await _context.SaveChangesAsync();
+                }
+
+                // Add new actor relationships
+                if (data.ActorIds != null && data.ActorIds.Any())
+                {
+                    foreach (var actorId in data.ActorIds)
+                    {
+                        var newActorMovie = new Actor_Movie()
+                        {
+                            MovieId = data.Id,
+                            ActorId = actorId
+                        };
+                        await _context.Actors_Movies.AddAsync(newActorMovie);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+
+                // Commit the transaction
+                await transaction.CommitAsync();
             }
-            await _context.SaveChangesAsync();
+            catch (Exception)
+            {
+                // Rollback the transaction in case of any error
+                await transaction.RollbackAsync();
+                throw; // Re-throw the exception to be handled by the controller
+            }
         }
     }
 }

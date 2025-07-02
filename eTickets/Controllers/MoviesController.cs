@@ -1,15 +1,14 @@
-﻿using eTickets.Data;
+﻿// MoviesController.cs
+using eTickets.Data;
 using eTickets.Data.Services;
 using eTickets.Data.Static;
 using eTickets.Data.ViewModels;
 using eTickets.Models;
-using eTickets.Data.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -79,7 +78,7 @@ namespace eTickets.Controllers
                     ImageURL = orderItem.Movie.ImageURL,
                     Price = orderItem.Price,
                     Category = orderItem.Movie.MovieCategory.ToString(),
-                    StartDate = DateTime.Now 
+                    StartDate = order.OrderDate // Purchase date
                 })
                 .ToListAsync();
 
@@ -114,6 +113,8 @@ namespace eTickets.Controllers
                         Category = orderItem.Movie.MovieCategory.ToString(),
                         StartDate = orderItem.Movie.StartDate,
                         OrderDate = order.OrderDate,
+                        PurchaseDate = order.OrderDate,
+                        EndDate = order.OrderDate.AddDays(7),
                         Cinema = orderItem.Movie.Cinema.Name,
                         Producer = orderItem.Movie.Producer.FullName
                     })
@@ -225,8 +226,44 @@ namespace eTickets.Controllers
                 return View(movie);
             }
 
-            await _service.UpdateMovieAsync(movie);
-            return RedirectToAction(nameof(Index));
+            // Handle image file upload if a new image is provided
+            if (movie.ImageFile != null)
+            {
+                string wwwRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                string imagesPath = Path.Combine(wwwRootPath, "images");
+
+                if (!Directory.Exists(imagesPath))
+                    Directory.CreateDirectory(imagesPath);
+
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + movie.ImageFile.FileName;
+                string filePath = Path.Combine(imagesPath, uniqueFileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await movie.ImageFile.CopyToAsync(stream);
+                }
+
+                movie.ImageURL = "/images/" + uniqueFileName;
+            }
+
+            try
+            {
+                await _service.UpdateMovieAsync(movie);
+                TempData["Success"] = "Movie updated successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                // Log the exception and show error message
+                TempData["Error"] = "An error occurred while updating the movie: " + ex.Message;
+
+                var movieDropdownsData = await _service.GetNewMovieDropdownsValues();
+                ViewBag.Cinemas = new SelectList(movieDropdownsData.Cinemas, "Id", "Name");
+                ViewBag.Producers = new SelectList(movieDropdownsData.Producers, "Id", "FullName");
+                ViewBag.Actors = new SelectList(movieDropdownsData.Actors, "Id", "FullName");
+
+                return View(movie);
+            }
         }
     }
 }

@@ -12,6 +12,9 @@ namespace eTickets.Data.ViewModels
         public string Category { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime OrderDate { get; set; }
+        public DateTime PurchaseDate { get; set; }
+        public DateTime EndDate { get; set; }
+
         public string Cinema { get; set; }
         public string Producer { get; set; }
     }
